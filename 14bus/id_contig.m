@@ -50,7 +50,7 @@ end
 function [residual, vec] = calc_residual(method, Ashift, x1, win, rangerest, xfull, truevec)
 load metadata.mat
 
-method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted'};
+method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted', 'RWeighted'};
 if(~(any(ismember(method_list, method))))
     disp('No Fitting Method Listed, Please Choose from the following list');
     disp(method_list);
@@ -87,7 +87,7 @@ switch method
         vec = P'*xfull;
         
     case 'Weighted'  % Constrained Fitting
-        alpha = 0.;
+        alpha = 0.8;
         
         Ifull = eye(differential + algebraic);
         order = [win, rangerest];
@@ -104,6 +104,31 @@ switch method
         
         % Calculate smallest eigenvector and then form eigenvector
         [vs,ds] = svds(G',1,'smallest');
+        xfull(1:length(win)) = vs(1)*x1;
+        xfull((length(win)+1):end) = vs(2:end);
+        residual = Ashift*xfull;
+        vec = P'*xfull;
+        
+    case 'RWeighted'  % Constrained Fitting
+        
+        
+        Ifull = eye(differential + algebraic);
+        order = [win, rangerest];
+        P = Ifull(order,:);
+        Ashift = Ashift*ctranspose(P);
+        
+        % Form Gramian
+        T = zeros(differential + algebraic,1+length(rangerest));
+        T(1:length(win),1) = x1;
+        T((length(win)+1):end,2:end) = eye(length(rangerest));
+        G = Ashift*T;
+        n = size(G,2);
+        Q = importdata('QQ.mat');
+        
+        % Calculate smallest eigenvector and then form eigenvector
+        T = G' * diag(rand(102,1)) * G;
+        %[vs,ds] = svds(G',1,'smallest');
+        [vs, ds] = eigs(T, 1, 'sm');
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;

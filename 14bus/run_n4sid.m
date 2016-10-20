@@ -19,7 +19,7 @@ range = max(max(data)) - min(min(data));
 
 z = iddata(data,zeros(len,1),timestep);
 % set model order
-modelorder = n*2 + 4;
+modelorder = 2*n + 4;
 m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none');
 
 
