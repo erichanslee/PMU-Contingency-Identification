@@ -15,13 +15,13 @@
 %     data/uN:          Left factor for base-contingency reduced J
 %     data/vN:          Right factor for "
 %
-function genscript(basename, numbuses, numcontigs)
+function genscript(basename, foldername, numcontigs)
 
   % Compute full and redued Jacobians for base case and write to file
   % DSB: Why do we trim tiny elements here and not below?
   [A, Aoriginal] = jacobian(basename);
-  matrix_write('../data/matrixfull', A);
-  matrix_write('../data/matrixred', Aoriginal);
+  name = sprintf('../data/%s/matrixfull', foldername);
+  matrix_write(name, A);
 
   for i = 1:numcontigs
 
@@ -30,13 +30,8 @@ function genscript(basename, numbuses, numcontigs)
 
     % Compute full and reduced Jacobians and write to file
     [A, As] = jacobian('contig');
-    matrix_write(sprintf('../data/matrixfull%d', i), A);
-    matrix_write(sprintf('../data/matrixred%d', i), As);
-
-    % Compute SVD and write factors to file
-    [U, S, V] = svds(Aoriginal-As);
-    matrix_write(sprintf('../data/u%d', i), trim_tiny(U*S));
-    matrix_write(sprintf('../data/v%d', i), trim_tiny(V));
+    matrix_write(sprintf('../data/%s/matrixfull%d', foldername, i), A);
+    matrix_write(sprintf('../data/%s/matrixred%d', foldername, i), As);
 
     % Clean up data file
     delete('contig.m');
@@ -72,7 +67,7 @@ end
 %
 function [A, Ared] = jacobian(fname)
   initpsat;
-  runpsat(fname, 'data');
+  runpsat(sprintf('GenScripts/%s.m',fname), 'data');
   runpsat('pf');
   A = [DAE.Fx DAE.Fy; DAE.Gx DAE.Gy];
   Ared = trim_tiny(DAE.Fx - DAE.Fy*(DAE.Gy\DAE.Gx));

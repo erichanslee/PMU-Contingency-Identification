@@ -1,5 +1,5 @@
 % Checks correctness of id_contig.m
-function unit_test_id_contig3(contignum)
+function [scores, ranking, vecs, res] = unit_test_id_contig3(contignum)
 
 [Q, ~] = qr(rand(89));
 D = diag(rand(size(Q,1),1));
@@ -8,7 +8,7 @@ save('QQ.mat', 'QQ');
 
 %% Run Test Instance
 
-test = load_problem('14bus', contignum, 'OrthReg', 'Equal', 64:77);
+test = load_problem('14bus', contignum, 'Constrained', 'None', 64:77);
 [scores, ranking, vecs, res] = run_problem(test);
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
 evecs_fitted  = vecs{ranking(1)};

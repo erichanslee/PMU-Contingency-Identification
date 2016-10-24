@@ -1,4 +1,4 @@
-function PlotSpectra(A, E, i)
+function PlotSpectra(A, E, i, color)
 
 hold on
 grid on
@@ -9,7 +9,7 @@ ylabel('Im');
 [center, radius] = Gershg(A+E, i);
 PlotCircle(center, radius, '--b');
 [center, radius] = BauerFike(A, E, i);
-PlotCircle(center, radius, '-b');
+PlotCircle(center, radius, 'b');
 
 
 [yright,d] = eig(A);
@@ -21,7 +21,7 @@ p2temp = d(i) + DIR/norm(DIR);
 p2 = [real(p2temp), imag(p2temp)];
 dp = p2-p1;                         
 q = quiver(p1(1),p1(2),dp(1),dp(2),0);
-q.Marker = 'o'
+q.Marker = 'o';
 
 end
 

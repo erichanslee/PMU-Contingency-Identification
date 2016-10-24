@@ -1,7 +1,7 @@
-function [ranking, scores] = calc_scores(method, residuals)
+function [ranking, scores] = calc_scores(method, vecs, residuals)
 load metadata.mat
 
-method_list = {'None', 'Equal'};
+method_list = {'None', 'Equal', 'Projection'};
 if(~(any(ismember(method_list, method))))
     disp('No Fitting Method Listed, Please Choose from the following list');
     disp(method_list);
@@ -10,15 +10,15 @@ end
 switch method
     
     case 'None' % no weighting; a simple sum
-        sum = zeros(1,numcontigs);
+        sums = zeros(1,numcontigs);
         for i = 1:numcontigs
             res = residuals{i};
             [~,n] = size(res);
             for j = 1:n
-                sum(i) = sum(i) + norm(res(:,j));
+                sums(i) = sums(i) + norm(res(:,j));
             end
         end
-        [scores, ranking] = sort(sum, 'ascend');
+        [scores, ranking] = sort(sums, 'ascend');
         
     case 'Equal'
         scores = zeros(1,numcontigs);
@@ -37,6 +37,24 @@ switch method
             end
         end
         [scores, ranking] = sort(scores, 'ascend');
+        
+    case 'Projection'
+        
+        A = full(matrix_read('matrixfull'));
+        E = zeros(size(A)); E(1:differential,1:differential) = eye(differential);
+        [X,~] = eig(A,E);
+        sums = zeros(1,numcontigs);
+        for i = 1:numcontigs
+            V = vecs{i};
+            
+            for j = 1:size(V,2)
+                temp = X\V(:,j);
+                temp = abs(temp);
+                temp = temp(temp > .1);
+                sums(i) = sums(i) + sum(temp);
+            end
+        end
+        [scores, ranking] = sort(sums, 'ascend');
 end
 
 end

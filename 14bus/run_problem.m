@@ -7,6 +7,6 @@ function [scores, ranking, vecs, res] = run_problem(instance)
 
 % predict contingency
 analysis_method = instance.analysis_method;
-[ranking, scores] = calc_scores(analysis_method, res);
+[ranking, scores] = calc_scores(analysis_method, vecs, res);
 
 end
