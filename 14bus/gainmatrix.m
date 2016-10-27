@@ -9,18 +9,19 @@ function L = gainmatrix(A,C)
     pole_subset3 = -20*rand(length(eigvals) - 2*length(pole_subset2) - length(pole_subset1),1) - 20;
     
     Poles = [pole_subset1; pole_subset2; conj(pole_subset2); pole_subset3];
-    [U, D, V] = svd(C');
-    Abar = U'*A'*U;
+
 
     switch method
         case 'Robust'
             [L, prec] = place(Abar, D, Poles);
         case 'LQR'
-            temp = rand(size(A));
+
             Q = eye(size(A));
-            R = eye(size(D,2));
-            N = zeros(size(D));
-            [L, S, e] = lqr(Abar, D, Q, R, N);
+            R = .1*eye(size(C',2));
+            N = zeros(size(C'));
+            %[L, S, e] = lqr(Abar, D, Q, R, N);
+            [L, S, e] = lqr(A', C', Q, R, N);
+            L = L';
             
         case 'Sylvester'
             D = diag(4*eigvals);
@@ -29,7 +30,5 @@ function L = gainmatrix(A,C)
             X = sylvester(A, D, C'*G);
             L = (G/X)';
     end
-    
-    L = (V*L*U')';
 
 end

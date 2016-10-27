@@ -16,8 +16,6 @@ maxfreq = .5;
 fittedvecs = zeros(differential + algebraic, length(empvals));
 fittedres = zeros(differential + algebraic, length(empvals));
 
-[v2,d2] = eig(A,E);
-[v2_subset, ~] = filter_eigpairs(minfreq, maxfreq, diag(d2), v2);
 
 for j = 1:length(empvals)
     
@@ -28,7 +26,7 @@ for j = 1:length(empvals)
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedres(:,j), fittedvecs(:,j)] = calc_residual(method, Ashift, x1, win, rangerest, xfull, v2_subset(rangerest,j));
+    [fittedres(:,j), fittedvecs(:,j)] = calc_residual(method, Ashift, x1, win, rangerest, xfull);
 end
 end
 
@@ -50,7 +48,7 @@ end
 function [residual, vec] = calc_residual(method, Ashift, x1, win, rangerest, xfull, truevec)
 load metadata.mat
 
-method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted', 'RWeighted'};
+method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted'};
 if(~(any(ismember(method_list, method))))
     disp('No Fitting Method Listed, Please Choose from the following list');
     disp(method_list);
@@ -87,20 +85,30 @@ switch method
         vec = P'*xfull;
         
     case 'Weighted'  % Constrained Fitting
-        alpha = 0.8;
         
+        D = ones(1, length(Ashift));
         Ifull = eye(differential + algebraic);
         order = [win, rangerest];
         P = Ifull(order,:);
         Ashift = Ashift*ctranspose(P);
+        D(1:length(win)) = 1; 
+        
+        % Specific to the 14 bus case
+        curidx = 1 + length(win);
+        D(curidx:curidx + 29) = .5;
+        curidx = curidx + 29;
+        D(curidx:curidx + 19) = .3;
+        curidx = curidx + 19;
+        D(curidx: curidx + 14) = .4;
+        
+        Ashift = diag(D)*Ashift*diag(1./D);
+        %[~,Ashift] = balance(Ashift);
         
         % Form Gramian
         T = zeros(differential + algebraic,1+length(rangerest));
         T(1:length(win),1) = x1;
         T((length(win)+1):end,2:end) = eye(length(rangerest));
         G = Ashift*T;
-        G(:,1) = G(:,1)*alpha;
-        G(:,2:end) = (1-alpha)*G(:, 2:end);
         
         % Calculate smallest eigenvector and then form eigenvector
         [vs,ds] = svds(G',1,'smallest');
@@ -109,58 +117,9 @@ switch method
         residual = Ashift*xfull;
         vec = P'*xfull;
         
-    case 'RWeighted'  % Constrained Fitting
-        
-        
-        Ifull = eye(differential + algebraic);
-        order = [win, rangerest];
-        P = Ifull(order,:);
-        Ashift = Ashift*ctranspose(P);
-        
-        % Form Gramian
-        T = zeros(differential + algebraic,1+length(rangerest));
-        T(1:length(win),1) = x1;
-        T((length(win)+1):end,2:end) = eye(length(rangerest));
-        G = Ashift*T;
-        n = size(G,2);
-        Q = importdata('QQ.mat');
-        
-        % Calculate smallest eigenvector and then form eigenvector
-        T = G' * diag(rand(102,1)) * G;
-        %[vs,ds] = svds(G',1,'smallest');
-        [vs, ds] = eigs(T, 1, 'sm');
-        xfull(1:length(win)) = vs(1)*x1;
-        xfull((length(win)+1):end) = vs(2:end);
-        residual = Ashift*xfull;
-        vec = P'*xfull;
         
     case 'OrthReg'  % Orthogonal Regularization.
-        temp = rand(length(truevec));
-        temp(:,1) = truevec;
-        [Q,~] = qr(temp);
-        Q(:,1) = 0;
-        Q = [zeros(1,length(truevec));Q];
-        Gamma = Q';
-        alpha = 0.1;
         
-        
-        Ifull = eye(differential + algebraic);
-        order = [win, rangerest];
-        P = Ifull(order,:);
-        Ashift = Ashift*ctranspose(P);
-        
-        % Form Gramian
-        T = zeros(differential + algebraic,1+length(rangerest));
-        T(1:length(win),1) = x1;
-        T((length(win)+1):end,2:end) = eye(length(rangerest));
-        G = [Ashift*T; alpha*Gamma];
-        
-        % Calculate smallest eigenvector and then form eigenvector
-        [vs,ds] = svds(G',1,'smallest');
-        xfull(1:length(win)) = vs(1)*x1;
-        xfull((length(win)+1):end) = vs(2:end);
-        residual = Ashift*xfull;
-        vec = P'*xfull;
         
 end
 

@@ -51,7 +51,7 @@ A22invA21 = A22\A21;
 
 for i = 2:len
     z = (fliplr(signal(i,:)))';
-    X(:,i+1) = S*X(:,i) + L*(Z(:,i) - z);
+    X(:,i+1) = dsys.A*X(:,i) - dsys.B*(Z(:,i) - z);
     Y(:,i) = A22invA21*X(:,i);
     Z(:,i) = H*Y(:,i);
 end

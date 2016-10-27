@@ -3,8 +3,8 @@ load metadata.mat
 
 [len,n] = size(linvecs)
 n = floor(n/2);
-rangebus = (differential + numlines + 1):(differential + numlines + numlines);
-
+rangebus = (differential + numlines + 1):(differential + numlines + numlines)
+linvecs = normalizematrix(linvecs);
 for i = 1:n
     subplot(n,1,i), plot(rangebus, abs(empvecs(rangebus,2*i)),'-k^'); hold on;
     subplot(n,1,i), plot(1:len, abs(linvecs(:,2*i)), '-b*'); hold on;

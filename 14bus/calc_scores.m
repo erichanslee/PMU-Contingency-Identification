@@ -43,6 +43,7 @@ switch method
         A = full(matrix_read('matrixfull'));
         E = zeros(size(A)); E(1:differential,1:differential) = eye(differential);
         [X,~] = eig(A,E);
+        X = normalizematrix(X);
         sums = zeros(1,numcontigs);
         for i = 1:numcontigs
             V = vecs{i};
