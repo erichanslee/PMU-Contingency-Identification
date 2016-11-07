@@ -3,7 +3,7 @@ classdef metadata
     properties
         numcontigs
         numbuses
-        basefilename
+        filename
         timestep
         numlines
         differential
