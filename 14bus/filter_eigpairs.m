@@ -5,6 +5,11 @@
 
 function [vi, di] = filter_eigpairs(minfreq, maxfreq, vals, vecs)
 
+% if vals is matrix then consider take diag of it
+if(size(vals,1) ~= 1 && size(vals,2) ~= 1)
+    vals = diag(vals);
+end
+
 rangepairs = find(abs(imag(vals)/2/pi) > minfreq & abs(imag(vals)/2/pi) < maxfreq);
 vals = vals(rangepairs);
 [~, idx1] = sort(abs(imag(vals)));

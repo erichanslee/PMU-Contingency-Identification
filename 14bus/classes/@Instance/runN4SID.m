@@ -12,7 +12,7 @@
 % actualcontig = the contingency that was actually simulated
 % confidence = the confidence levels for correctly identified contigs
 
-function [empvals, empvecs] = runN4SID(obj, modelsize)
+function [empvecs, empvals] = runN4SID(obj, modelsize)
 n = modelsize;
 [numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 data = obj.dynamic_data;
@@ -27,14 +27,9 @@ m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none');
 
 
 %% Calculate Eigenvalue and Eigenvector Predictions from N4SID
-[ mx, ~] = eig(m.A);
-empvals = (log(eig(m.A))/timestep);
-rangeactual = find(abs(imag(empvals)/2/pi) > minfreq & abs(imag(empvals)/2/pi) < maxfreq);
-empvals = empvals(rangeactual);
-[~, idx2] = sort(abs(imag(empvals)));
+[ mx, md] = eig(m.A);
+empvals = (log(md)/timestep);
 empvecs = m.C*mx;
-empvecs = empvecs(:,rangeactual);
-empvals = empvals(idx2);
-empvecs = empvecs(:,idx2);
+
 
 end
