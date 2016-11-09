@@ -15,7 +15,7 @@ function win = place_PMU(contignum, PMUidx)
 load metadata.mat
 
 rangebus = (differential + numlines + 1):(differential + numlines + numlines);
-run(sprintf('GenScripts/contig%d.m',contignum));
+run(sprintf('contig%d.m',contignum));
 Lines = Line.con(:,1:2);
 Lines(contignum,:) = [];
 

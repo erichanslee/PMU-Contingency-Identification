@@ -6,18 +6,17 @@ testInstance = Instance;
 load(sprintf('data/%s/metadata.mat', casename));
 testInstance.metadata.numcontigs = numcontigs;
 testInstance.metadata.numbuses = numbuses;
-testInstance.metadata.filename = basefilename;
+testInstance.metadata.filename = casename;
 testInstance.metadata.timestep = timestep;
 testInstance.metadata.numlines = numlines;
 testInstance.metadata.differential = differential;
 testInstance.metadata.algebraic = algebraic;
 
 % Initialize testInstance.dynamic_data
-win = (differential + numlines + 1):(differential + numlines + numlines);
-filename = sprintf('data/%s/busdata_%d.mat', casename, contignum);
+filename = sprintf('busdata%d.mat',contignum);
 load(filename);
 offset = 50;
-data = data(offset:end, win - (differential + numlines));
+data = data(offset:end, PMU - (differential + numbuses));
 
 % Initialize rest
 testInstance.casename = casename;
@@ -44,7 +43,7 @@ for contignum = 1:n
     I = eye(differential);
     E = zeros(algebraic + differential);
     E(1:differential,1:differential) = I;
-    A = full(matrix_read(sprintf('data/%s/matrixfull%d', testInstance.casename, contignum)));
+    load(sprintf('matrixdata%d.mat', contignum));
     testInstance.testbank{contignum} = {A,E};
 end
 

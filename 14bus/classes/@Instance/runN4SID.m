@@ -22,7 +22,7 @@ len = size(data,1);
 
 z = iddata(data,zeros(len,1),timestep);
 % set model order
-modelorder = 2*n + 4;
+modelorder = 40;
 m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none');
 
 
