@@ -20,8 +20,8 @@ len = size(data,1);
 
 z = iddata(data,zeros(len,1),timestep);
 % set model order
-modelorder = 28;
-opt = n4sidOptions('N4Weight', 'auto');
+modelorder = 40;
+opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'simulation');
 m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none', opt);
 
 

@@ -1,9 +1,9 @@
 function [results, results3, confidence] = testsparse()
 % Runs contig identification on all contingencies
-
+tic;
 load metadata.mat
 
-numtrials = 3;
+numtrials = 4;
 
 results = zeros(1,numtrials);
 results3 = zeros(1,numtrials);
@@ -20,7 +20,7 @@ for i = 1:numtrials
         confidence(i) = confidence(i) + abs(scores(1) - scores(2))/scores(1);
     end
 end
-
+toc
 plot(results/numcontigs, '-ob');
 hold on
 plot(results3/numcontigs, '-*r');
