@@ -8,13 +8,13 @@
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 
-% win = indices in which voltages can be read (indexed for PSAT)
+% win = indices in which voltages can be read/inferred (indexed for PSAT)
 
 function win = place_PMU(contignum, PMUidx)
 
 load metadata.mat
 
-rangebus = (differential + numlines + 1):(differential + numlines + numlines);
+rangebus = (differential + numbuses + 1):(differential + numbuses + numbuses);
 run(sprintf('contig%d.m',contignum));
 Lines = Line.con(:,1:2);
 Lines(contignum,:) = [];

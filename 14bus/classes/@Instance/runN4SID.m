@@ -16,14 +16,13 @@ function [empvecs, empvals] = runN4SID(obj, modelsize)
 n = modelsize;
 [numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 data = obj.dynamic_data;
-maxfreq = obj.maxfreq;
-minfreq = obj.minfreq;
 len = size(data,1);
 
 z = iddata(data,zeros(len,1),timestep);
 % set model order
-modelorder = 40;
-m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none');
+modelorder = 28;
+opt = n4sidOptions('N4Weight', 'auto');
+m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none', opt);
 
 
 %% Calculate Eigenvalue and Eigenvector Predictions from N4SID

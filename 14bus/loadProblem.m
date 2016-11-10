@@ -3,7 +3,7 @@ function testInstance = loadProblem(casename, contignum, fitting_method, analysi
 testInstance = Instance;
 
 % Initialize testInstance.metadata
-load(sprintf('data/%s/metadata.mat', casename));
+load(sprintf('metadata.mat', casename));
 testInstance.metadata.numcontigs = numcontigs;
 testInstance.metadata.numbuses = numbuses;
 testInstance.metadata.filename = casename;
@@ -24,8 +24,8 @@ testInstance.dynamic_data = data;
 testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;
 testInstance.PMU = PMU;
-testInstance.minfreq = 0.05;
-testInstance.maxfreq = 0.5;
+testInstance.minfreq = 0.02;
+testInstance.maxfreq = 1;
 
 % Initialize testInstance.testbank
 if(isempty(testInstance.metadata))

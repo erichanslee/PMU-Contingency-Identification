@@ -26,9 +26,10 @@ listres = cell(1,numcontigs);
 
 
 %use n4sid
-[empvecs, empvals]  = runN4SID(obj, numlines);
+[empvecs, empvals]  = runN4SID(obj, length(PMU));
 empvecs = normalizematrix(empvecs);
-[empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs);
+mode = 'freq';
+[empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 
 
 
