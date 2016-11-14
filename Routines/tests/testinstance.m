@@ -7,7 +7,7 @@ end
 
 %% Run Test Instance
 
-test = loadProblem('39bus', contignum, 'Weighted', 'None', PMU);
+test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', PMU);
 [scores, ranking, vecs, res] = run_problem(test);
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
 

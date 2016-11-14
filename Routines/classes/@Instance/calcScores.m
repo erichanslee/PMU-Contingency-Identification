@@ -1,7 +1,8 @@
-function [ranking, scores] = calcScores(obj, method, vecs, residuals)
+function [ranking, scores] = calcScores(obj, method, vecs, residuals, weights)
+
 [numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 
-method_list = {'None', 'Equal', 'Projection'};
+method_list = {'None', 'Equal', 'Projection', 'Weighted'};
 if(~(any(ismember(method_list, method))))
     disp('No Fitting Method Listed, Please Choose from the following list');
     disp(method_list);
@@ -53,6 +54,17 @@ switch method
                 temp = abs(temp);
                 temp = temp(temp > .1);
                 sums(i) = sums(i) + sum(temp);
+            end
+        end
+        [scores, ranking] = sort(sums, 'ascend');
+        
+    case 'Weighted'
+        sums = zeros(1,numcontigs);
+        for i = 1:numcontigs
+            res = residuals{i};
+            [~,n] = size(res);
+            for j = 1:n
+                sums(i) = sums(i) + weights(j)*norm(res(:,j));
             end
         end
         [scores, ranking] = sort(sums, 'ascend');

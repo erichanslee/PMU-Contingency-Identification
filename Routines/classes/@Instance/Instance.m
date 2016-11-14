@@ -13,8 +13,8 @@ classdef Instance
     end
     
     methods
-        [listvecs, listres] = calcContig(obj)
-        [ranking, scores] = calcScores(obj, method, vecs, residuals)
+        [listvecs, listres, weights] = calcContig(obj)
+        [ranking, scores] = calcScores(obj, method, vecs, residuals, weights)
         [empvals, empvecs] = runN4SID(obj, modelsize)
         [numcontigs, numbuses, basefilename, timestep ...
         ,numlines, differential, algebraic] = getMetadata(obj)

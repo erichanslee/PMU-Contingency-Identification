@@ -15,8 +15,9 @@ testInstance.metadata.algebraic = algebraic;
 % Initialize testInstance.dynamic_data
 filename = sprintf('busdata%d.mat',contignum);
 load(filename);
-offset = 50;
-data = data(offset:end, PMU - (differential + numbuses));
+front_offset = 50;
+back_offset = 100;
+data = data(front_offset:(end - back_offset), PMU - (differential + numbuses));
 
 % Initialize rest
 testInstance.casename = casename;
@@ -25,7 +26,7 @@ testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;
 testInstance.PMU = PMU;
 testInstance.minfreq = 0.02;
-testInstance.maxfreq = 1;
+testInstance.maxfreq = 20;
 
 % Initialize testInstance.testbank
 if(isempty(testInstance.metadata))

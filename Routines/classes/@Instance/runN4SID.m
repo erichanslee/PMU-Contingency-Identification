@@ -12,15 +12,13 @@
 % actualcontig = the contingency that was actually simulated
 % confidence = the confidence levels for correctly identified contigs
 
-function [empvecs, empvals] = runN4SID(obj, modelsize)
-n = modelsize;
+function [empvecs, empvals] = runN4SID(obj, modelorder)
 [numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 data = obj.dynamic_data;
 len = size(data,1);
 
 z = iddata(data,zeros(len,1),timestep);
 % set model order
-modelorder = 40;
 opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'simulation');
 m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none', opt);
 

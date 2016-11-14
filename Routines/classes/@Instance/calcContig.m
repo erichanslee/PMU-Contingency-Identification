@@ -11,7 +11,7 @@
 % predcontig = the cotingency the chosen method predicts
 % confidence = the confidence levels for correctly identified contigs
 
-function [listvecs, listres] = calcContig(obj)
+function [listvecs, listres, weights] = calcContig(obj)
 
 
 fitting_method = obj.fitting_method;
@@ -26,10 +26,19 @@ listres = cell(1,numcontigs);
 
 
 %use n4sid
-[empvecs, empvals]  = runN4SID(obj, length(PMU));
-empvecs = normalizematrix(empvecs);
+modelorder = 40;
+[empvecs, empvals]  = runN4SID(obj, modelorder);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
+
+%fill weights with amplitudes
+weights = zeros(length(empvals), 1);
+for i = 1:length(empvals)
+    weights(i) = norm(empvecs(:,1));
+end
+
+%normalize eigenvectors
+empvecs = normalizematrix(empvecs);
 
 
 
