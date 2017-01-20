@@ -5,7 +5,7 @@ function testscoregap(contignum)
 load metadata.mat
 
 % Run Contingency Identification Routine
-PMUidx = [16];
+PMUidx = [1, 3, 4, 16];
 PMU = place_PMU(contignum, PMUidx);
 [scores, ranking, vecs, res] = testinstance(contignum, PMU);
 
