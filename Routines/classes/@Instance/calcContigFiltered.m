@@ -1,4 +1,4 @@
-%% calc_contig loads 
+%% calc_contig (Filtered Version)
 
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % method = method type number one would like to use
@@ -44,8 +44,8 @@ weights = weights/norm(weights);
 empvecs = normalizematrix(empvecs);
 
 %get contig eval order
-evalorder = 1:numcontigs;
-%evalorder = randperm(numcontigs);
+%evalorder = 1:numcontigs;
+evalorder = randperm(numcontigs);
 min = inf;
 
 %allocate vectors
