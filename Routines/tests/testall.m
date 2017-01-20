@@ -10,7 +10,7 @@ confidence = zeros(1,numbuses);
 for i = 1:numbuses
     for j = 1:numcontigs
         contig = j;
-        numberPMU = i:numbuses;
+        numberPMU = [16 1 i];
         PMU = place_PMU(contig, numberPMU);
         [scores, ranking, vecs, res] = testinstance(contig, PMU);
         if(contig ==  ranking(1)) results(i) = results(i) + 1; end

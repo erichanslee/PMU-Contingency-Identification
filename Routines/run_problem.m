@@ -5,8 +5,9 @@
 [vecs, res, weights] = calcContig(instance);
 
 % predict contingency
-analysis_method = instance.analysis_method;
+    analysis_method = instance.analysis_method;
 
 [ranking, scores] = calcScores(instance, analysis_method, vecs, res, weights);
 
 end
+    

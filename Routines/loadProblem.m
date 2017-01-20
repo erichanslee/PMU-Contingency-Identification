@@ -25,8 +25,9 @@ testInstance.dynamic_data = data;
 testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;
 testInstance.PMU = PMU;
-testInstance.minfreq = 0.02;
-testInstance.maxfreq = 20;
+%testInstance.minfreq = 0.05;
+testInstance.minfreq = 0.5;
+testInstance.maxfreq = 10;
 
 % Initialize testInstance.testbank
 if(isempty(testInstance.metadata))

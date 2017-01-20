@@ -8,10 +8,10 @@
 % noise = boolean value indicating presence of noise
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
-% predcontig = the cotingency the chosen method predicts
-% confidence = the confidence levels for correctly identified contigs
+% scores = scores with filtering
+% eigenfits = number of eigenvectors fitted before scoring. 
 
-function [listvecs, listres, weights] = calcContig(obj)
+function [scores, eigenfits] = calcContigFiltered(obj)
 
 
 fitting_method = obj.fitting_method;
@@ -21,8 +21,6 @@ dynamic_data = obj.dynamic_data;
 
 maxfreq = obj.maxfreq;
 minfreq = obj.minfreq;
-listvecs = cell(1,numcontigs);
-listres = cell(1,numcontigs);
 
 
 %use n4sid
@@ -45,17 +43,28 @@ weights = weights/norm(weights);
 %normalize eigenvectors
 empvecs = normalizematrix(empvecs);
 
+%get contig eval order
+evalorder = 1:numcontigs;
+%evalorder = randperm(numcontigs);
+min = inf;
 
+%allocate vectors
+eigenfits = zeros(1, numcontigs);
+scores = zeros(1, numcontigs);
 
 for k = 1:numcontigs    
     % Read in matrix
-    [A,E] = obj.retrieveModel(k);
+    contig = evalorder(k);
+    [A,E] = obj.retrieveModel(contig);
     format long
     
-    %% Calculate Backward Error
-    [fittedres, fittedvecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU);
-    listvecs{k} = fittedvecs;
-    listres{k} = fittedres;
+    %% Calculate Backward Error (cutoff right now is 2*min)
+    [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights);
+    if score < min
+        min = score;
+    end
+    scores(contig) = score;
+    eigenfits(contig) = numfits;
 end
 
 

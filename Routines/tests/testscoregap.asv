@@ -1,0 +1,20 @@
+function testscoregap(contignum)
+% Displays score gap for Contingency contignum with a single PMU on 16
+
+% NOTE: Nice Gap, Contingency 3. Bad Gap, Contingency 10
+load metadata.mat
+
+% Run Contingency Identification Routine
+PMUidx = [16];
+PMU = place_PMU(contignum, PMUidx);
+[scores, ranking, vecs, res] = testinstance(contignum, PMU);
+
+
+X = sort(scores);
+plot(X, '-ob');
+plot(1, X(1)'or');
+hold on
+ylabel('Contingency Scores')
+xlabel('Number of PMUs Missing')
+end
+

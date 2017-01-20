@@ -1,9 +1,6 @@
 % Checks correctness of id_contig.m
 function [scores, ranking, vecs, res] = testinstance(contignum, PMU)
 
-if(nargin < 2)
-    PMU = 64:77;
-end
 
 %% Run Test Instance
 
