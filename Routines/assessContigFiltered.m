@@ -102,7 +102,7 @@ switch method
         Ashift = Ashift*ctranspose(P);
         D(1:length(win)) = 1; 
         
-        % Specific to the 14 bus case
+        % Weighing 
         curidx = 1 + length(win);
         D(curidx:curidx + 29) = .5;
         curidx = curidx + 29;

@@ -115,7 +115,7 @@ switch method
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;
-        vec = P'*xfull;
+        vec = P'*xfull; 
         
         
     case 'OrthReg'  % Orthogonal Regularization.

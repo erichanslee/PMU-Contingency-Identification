@@ -44,8 +44,14 @@ weights = weights/norm(weights);
 empvecs = normalizematrix(empvecs);
 
 % Get contig eval order
+
+% Fixed
 evalorder = 1:numcontigs;
-%evalorder = randperm(numcontigs);%
+
+% Random
+%evalorder = randperm(numcontigs);
+
+% LS 
 % temp = zeros(1, numcontigs);
 % for i = 1:numcontigs
 %     temp(i) = LSfit(obj, i);

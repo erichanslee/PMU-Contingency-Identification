@@ -13,11 +13,11 @@ display(sum(numfits)/(max(numfits)*numcontigs));
 %Generate Plot
 hold on
 [X, idx] = sort(scores);
-offset = X(1)*.2;
+offset = X(1);
 Y = numfits(idx);
 plot(X, '-ob');
 plot(1:numcontigs, 1.01*X(1)*ones(1, numcontigs), '-r', 'LineWidth', 2);
-text(floor(numcontigs/2), X(1) + .5*offset, 'True Cutoff Line');
+text(floor(numcontigs/2), X(1) + offset, 'True Cutoff Line', 'FontSize', 12);
 
 % hold on
 % set(gca,'xtick',[])
@@ -30,12 +30,18 @@ text(floor(numcontigs/2), X(1) + .5*offset, 'True Cutoff Line');
 for i = 1:numcontigs
    y = X(i) + offset;
    txt = num2str(Y(i));
-   text(i, y, txt);
+   text(i, y, txt, 'FontSize', 12);
 end
-ylabel('Number of Eigenvector Fittings')
+ylabel('Likelihood Score')
 xlabel('Contingency (Sorted)')
 
 % Save Figure
+set(gca,'xtick',[]);
+%set(gca,'fontsize', 12);
+fig = gcf;
+fig.PaperUnits = 'inches';
+fig.PaperPosition = [0 0 10 5];
+print('FigFiltering', '-dpng');
 
 end
 

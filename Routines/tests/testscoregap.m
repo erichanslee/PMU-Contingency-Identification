@@ -6,6 +6,7 @@ load metadata.mat
 
 % Run Contingency Identification Routine
 PMUidx = [1, 3, 4, 16];
+%PMUidx = 16;
 PMU = place_PMU(contignum, PMUidx);
 [scores, ranking, vecs, res] = testinstance(contignum, PMU);
 
@@ -13,9 +14,8 @@ PMU = place_PMU(contignum, PMUidx);
 X = sort(scores);
 hold on
 set(gca,'xtick',[])
-plot(X, 'db', 'linewidth', 1.5);
-plot(X, '-b', 'linewidth', 1.5);
-plot(1, X(1), 'dr', 'linewidth', 4);
+plot(X, '-ob', 'linewidth', 1.5);
+plot(1, X(1), '*r', 'linewidth', 2);
 ylabel('Contingency Scores')
 xlabel('Contigency (Sorted)')
 end
