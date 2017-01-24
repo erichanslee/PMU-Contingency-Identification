@@ -1,6 +1,6 @@
 % Unit Test for LSfit_inner
-% The test checks to make sure the the fit for the ODE system
-% x'(t) = Ax(t) 
+% The test checks to make sure the the least squares fit for the ODE system
+% x'(t) = Ax(t) works well. 
 
 
 % Initialize data, making sure to have a zero and complex eigenvectors
