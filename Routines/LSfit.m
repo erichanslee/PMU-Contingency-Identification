@@ -8,14 +8,19 @@
 
 function results = LSfit(obj, contignum)
 
-% Get Metadata and initialize some variables
+% Get Metadata and reshape signal into proper format
 load metadata.mat
 signal = obj.dynamic_data;
+[numtimesteps, signalsize] = size(signal);
+for i = 1:signalsize
+    signal(:,i) = signal(:,i) - mean(signal(floor(numtimesteps/2):end,i)); %Shift by steady state to avoid fitting zero eigenpairs
+end
+signal = signal(1:floor(numtimesteps/2), :);
 signal = signal'; % signal currently in column format
-tstep = .05;
-dataoffset = 100*timestep;
-results = zeros(1, numcontigs);
+timestep = .05;
+dataoffset = 20*timestep;
 n = differential;
+signal = reshape(signal, [], 1);
 
 % Grab model, form Schur Complement SCH
 [A,~] = obj.retrieveModel(contignum);
@@ -31,26 +36,9 @@ vals(abs(vals) < 1e-8) = 0;
 mode = 'freq';
 [fvecs, fvals] = filter_eigpairs(0, 20, vals, vecs, mode);
 mode = 'damp';
-[fvecs, fvals] = filter_eigpairs(0, 100, fvals, fvecs, mode);
+[eigvecs, eigvals] = filter_eigpairs(0, 15, fvals, fvecs, mode);
 
-% Form matrix M
-[len, numsteps] = size(signal);
-SIG = reshape(signal, [], 1);
-nummodes = length(fvals);
-M = zeros(length(SIG), nummodes);
-for i = 1:numsteps
-    for j = 1:nummodes
-        foffset = (i-1)*len + 1;
-        boffset = i*len;
-        time = (dataoffset + (i-1)*tstep);
-        M(foffset:boffset, j) = exp(fvals(j)*time)*fvecs(:,j);
-    end
-end
-
-% Regress and Calc Residual
-c = M\SIG;
-res = M*c - SIG;
-results = norm(res);
+results = LSfit_inner(signal, signalsize, timestep, dataoffset, eigvals, eigvecs);
 
 
 

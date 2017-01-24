@@ -1,10 +1,12 @@
-function results = testLS(contignum)
-% Tests Least Squares Fitting LSfit()
+% Tests Least Squares Fitting LSfit() on all possible contingencies and
+% then outputs ranking of correct contingencies
+function ranking = testLS()
+
 load metadata.mat
-PMUidx = 16;
-PMU = place_PMU(contignum, PMUidx);
-test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', PMU);
-results = zeros(1, numcontigs);
+ranking = zeros(1,numcontigs);
+
 for i = 1:numcontigs
-    results(i) = LSfit(test, i);
+    results = testLS_inner(i);
+    [~, idx] = sort(results);
+    ranking(i) = find(idx == i);
 end
