@@ -6,7 +6,7 @@ len = size(data,1);
 z = iddata(data,zeros(len,1),timestep);
 
 % set model order
-opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'simulation');
+opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'prediction');
 m = n4sid(z, modelorder,'Form','modal','DisturbanceModel','estimate', opt);
 
 % Calc eigenvecs

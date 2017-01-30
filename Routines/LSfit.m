@@ -13,7 +13,7 @@ load metadata.mat
 signal = obj.dynamic_data;
 [numtimesteps, signalsize] = size(signal);
 for i = 1:signalsize
-    signal(:,i) = signal(:,i) - mean(signal(floor(numtimesteps/2):end,i)); %Shift by steady state to avoid fitting zero eigenpairs
+    signal(:,i) = signal(:,i) - mean(signal(floor(numtimesteps/3):end,i)); %Shift by steady state to avoid fitting zero eigenpairs
 end
 signal = signal(1:floor(numtimesteps/2), :);
 signal = signal'; % signal currently in column format
@@ -36,7 +36,7 @@ vals(abs(vals) < 1e-8) = 0;
 mode = 'freq';
 [fvecs, fvals] = filter_eigpairs(0, 20, vals, vecs, mode);
 mode = 'damp';
-[eigvecs, eigvals] = filter_eigpairs(0, 15, fvals, fvecs, mode);
+[eigvecs, eigvals] = filter_eigpairs(0, 40, fvals, fvecs, mode);
 
 results = LSfit_inner(signal, signalsize, timestep, dataoffset, eigvals, eigvecs);
 
