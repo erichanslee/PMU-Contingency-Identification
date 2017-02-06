@@ -1,22 +1,19 @@
 %% calc_contig (Filtered Version)
 
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
-% method = method type number one would like to use
-% data = voltage readings from PMUs
-% win = indices where we see/infer voltages
-% rangerest = indices of everything else
-% noise = boolean value indicating presence of noise
+% obj = instance object
+% noise = amount of noise injected
+% modelorder = order of model for N4SID to fit
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % scores = scores with filtering
 % eigenfits = number of eigenvectors fitted before scoring. 
 
-function [scores, eigenfits] = calcContigFiltered(obj)
+function [scores, eigenfits] = calcContigFiltered(obj, noise, modelorder)
 
 
 fitting_method = obj.fitting_method;
 PMU = obj.PMU;
-dynamic_data = obj.dynamic_data;
 [numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 
 maxfreq = obj.maxfreq;
@@ -24,8 +21,6 @@ minfreq = obj.minfreq;
 
 
 % Use n4sid
-modelorder = 20;
-noise = .01;
 [empvecs, empvals]  = runN4SID(obj, modelorder, noise);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);

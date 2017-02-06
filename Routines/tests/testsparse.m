@@ -3,19 +3,20 @@ function [results, results3, confidence] = testsparse()
 
 % Load metadata, initialize results vectors
 load metadata.mat
-numtrials = 1;
+numtrials = 10;
 results = zeros(1,numtrials);
 results3 = zeros(1,numtrials);
 confidence = zeros(1,numtrials);
+noise = .01;
+modelorder = 20; 
+PMUidx = [16 1 13 28 31 22 23 37 5 9];
 
 % Run contingency identification for all possible contigs (numcontigs)
 for i = 1:numtrials
     for j = 1:numcontigs
         contig = j;
-        PMUidx = [16 1];
-        PMU = place_PMU(contig, PMUidx);
-        %PMU = 120:(125 + 3*i);
-        [scores, ranking, vecs, res] = testinstanceFiltered(contig, PMU);
+        PMU = place_PMU(contig, PMUidx(1:i));
+        [scores, ranking, ~, ~] = testinstanceFiltered(contig, PMU, noise, modelorder);
         if(contig ==  ranking(1)) results(i) = results(i) + 1; end
         if(ismember(contig, ranking(1:3))) results3(i) = results3(i) + 1; end
         confidence(i) = confidence(i) + abs(scores(1) - scores(2))/scores(1);

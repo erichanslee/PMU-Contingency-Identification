@@ -6,13 +6,17 @@
 % and then calculates c = M\S where S is the signal and c is a vector of
 % coefficients
 
-%~~~~Input~~~~%
+% ~~~~~~~~~INPUTS~~~~~~~~~ %
 
 % signal: the signal itself, should be in the form of a column vector
 % signalsize: denotes the dimensions of the signal per timestep.
 % signaltimestep: denotes the timestep between signals.
 % eigvals: eigenvalues to fit.
 % eigvecs: eigenvectors to fit.
+
+% ~~~~~~~~~OUTPUTS~~~~~~~~~ %
+
+% results: simply norm of the residual to the LS fit. 
 
 function results = LSfit_inner(signal, signalsize, signaltstep, signalstart, eigvals, eigvecs)
 

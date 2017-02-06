@@ -1,3 +1,5 @@
+% Tests the impact of noise to when running N4SID on real data. 
+
 contignum = 2;
 noise = .01;
 PMU = [16 1 2 5 10 35];

@@ -6,6 +6,15 @@
 % and then calculates c = M\S where S is the signal and c is a vector of
 % coefficients
 
+% ~~~~~~~~~INPUTS~~~~~~~~~ %
+
+% obj = instance object
+% contignum = contingency to identify
+
+% ~~~~~~~~~OUTPUTS~~~~~~~~~ %
+
+% results = size of residual after fitting
+
 function results = LSfit(obj, contignum)
 
 % Get Metadata and reshape signal into proper format
