@@ -24,8 +24,9 @@ minfreq = obj.minfreq;
 
 
 % Use n4sid
-modelorder = 60;
-[empvecs, empvals]  = runN4SID(obj, modelorder);
+modelorder = 20;
+noise = .01;
+[empvecs, empvals]  = runN4SID(obj, modelorder, noise);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';

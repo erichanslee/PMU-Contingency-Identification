@@ -14,8 +14,6 @@
 
 function [score, numfits] = assessContigFiltered(A, E, method, empvals, empvecs, win, cutoff, weights)
 load metadata.mat
-minfreq = 0.05;
-maxfreq = .5;
 score = 0;
 numfits = 0;
 [~, idx] = sort(weights, 'descend');

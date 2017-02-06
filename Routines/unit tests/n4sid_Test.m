@@ -14,8 +14,13 @@ timestep = .05;
 timesteps = interval(1):timestep:interval(end);
 [t,x] = ode45(f, timesteps, initial);
 
+[EvecsNONE, EvalsNONE] = runN4SID_inner(x, timestep, 3);
+
 % Add a bit of white noise
 W = randn(size(x)); 
-x = x + .01*W.*x;
+x = x + .1*W.*x;
 
-[eigvecs, eigvals] = runN4SID_inner(x, timestep, 3);
+[EvecsNOISE, EvalsNOISE] = runN4SID_inner(x, timestep, 3);
+
+M = normalizematrix(EvecsNONE)'*normalizematrix(EvecsNOISE);
+Msimilarity = abs(diag(M))

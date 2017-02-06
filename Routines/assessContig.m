@@ -11,8 +11,6 @@
 
 function [fittedres, fittedvecs] = assessContig(A, E, method, empvals, empvecs, win)
 load metadata.mat
-minfreq = 0.05;
-maxfreq = .5;
 fittedvecs = zeros(differential + algebraic, length(empvals));
 fittedres = zeros(differential + algebraic, length(empvals));
 

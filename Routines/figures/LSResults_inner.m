@@ -9,3 +9,4 @@ results = zeros(1, numcontigs);
 for i = 1:numcontigs
     results(i) = LSfit(test, i);
 end
+

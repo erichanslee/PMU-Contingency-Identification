@@ -1,6 +1,6 @@
 % LSfit_inner calculates a least squares fit  of a signal by forming the
 % matrix M consisting of elements (e^lambda*t)*v where (lambda, v) are
-% eigenpairs supplied. 
+% eigenpairs supplied.
 
 % So LSfit first calculates the eigenpairs (lambda, v), forms the matrix M,
 % and then calculates c = M\S where S is the signal and c is a vector of
@@ -10,9 +10,9 @@
 
 % signal: the signal itself, should be in the form of a column vector
 % signalsize: denotes the dimensions of the signal per timestep.
-% signaltimestep: denotes the timestep between signals. 
-% eigvals: eigenvalues to fit. 
-% eigvecs: eigenvectors to fit. 
+% signaltimestep: denotes the timestep between signals.
+% eigvals: eigenvalues to fit.
+% eigvecs: eigenvectors to fit.
 
 function results = LSfit_inner(signal, signalsize, signaltstep, signalstart, eigvals, eigvecs)
 
@@ -32,8 +32,20 @@ for i = 1:numsteps
     end
 end
 
-% Regress and Calc Residual
-c = M\signal;
-res = M*c - signal;
+% ~~~ PROBABLY NOT NECESSARY ~~~ %
+% % Dump Rank Deficiencies
+% [~, R, E] = qr(M);
+% M = M*E;
+% idx = (abs(diag(R)) < 1e-8) == 1;
+% M(:, idx) = [];
+
+
+% Calc Solution + Iterative Refinement
+R = triu(qr(M));
+x = R\(R'\(M'*signal));
+res = signal - M*x;
+e = R\(R'\(M'*res));
+x = x + e;
+res = signal - M*x;
 results = norm(res);
 

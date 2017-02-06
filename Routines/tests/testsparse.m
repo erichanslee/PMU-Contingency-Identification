@@ -12,7 +12,7 @@ confidence = zeros(1,numtrials);
 for i = 1:numtrials
     for j = 1:numcontigs
         contig = j;
-        PMUidx = [16];
+        PMUidx = [16 1];
         PMU = place_PMU(contig, PMUidx);
         %PMU = 120:(125 + 3*i);
         [scores, ranking, vecs, res] = testinstanceFiltered(contig, PMU);
@@ -27,9 +27,9 @@ plot(results/numcontigs, '-ob');
 hold on
 plot(results3/numcontigs, '-*r');
 ylabel('Percentage of Correct Diagnoses')
-xlabel('Number of PMUs Missing')
+xlabel('Number of PMUs')
 legend('Top 1', 'Top 3')
-axis([1 14 0 1.5])
+axis([1 10 0 1.5])
 
 end
 

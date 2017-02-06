@@ -26,9 +26,8 @@ testInstance.dynamic_data = data;
 testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;
 testInstance.PMU = PMU;
-%testInstance.minfreq = 0.05;
 testInstance.minfreq = 0.5;
-testInstance.maxfreq = 10;
+testInstance.maxfreq = 10; %10 because we assume PMU sampling at 20hz and by Shannon Nyquist we should only be able to fit 10hz
 
 % Initialize testInstance.testbank
 if(isempty(testInstance.metadata))

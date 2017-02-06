@@ -12,7 +12,7 @@ end
 
 % Filter by frequency i.e. imaginary part of eigenvalue
 if(strcmp('freq',mode))
-    rangepairs = find(abs(imag(vals)/2/pi) >= minbound & abs(imag(vals)/2/pi) <= maxbound);
+    rangepairs = find(abs(imag(vals)/pi) >= minbound & abs(imag(vals)/pi) <= maxbound);
     
 % Filter by dampening factor i.e. real part of eigenvalue
 elseif(strcmp('damp',mode))
