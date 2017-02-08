@@ -7,9 +7,9 @@ numtrials = 10;
 results = zeros(1,numtrials);
 results3 = zeros(1,numtrials);
 confidence = zeros(1,numtrials);
-noise = .01;
-modelorder = 20; 
-PMUidx = [16 1 13 28 31 22 23 37 5 9];
+noise = .00;
+modelorder = 40; 
+PMUidx = [16 1];
 
 % Run contingency identification for all possible contigs (numcontigs)
 for i = 1:numtrials

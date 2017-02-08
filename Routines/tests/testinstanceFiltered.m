@@ -1,6 +1,6 @@
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % contignum = contingency number
-% PMU = Indices of buses PMUs can see
+% PMU = Indices of buses PMUs can see 
 % noise = percentage of noise to add to dynamic data
 % modelorder = order of model to fit to n4sid
 

@@ -11,23 +11,21 @@
 % predcontig = the cotingency the chosen method predicts
 % confidence = the confidence levels for correctly identified contigs
 
-function [listvecs, listres, weights] = calcContig(obj)
+function [listvecs, listres, weights] = calcContig(obj, noise, modelorder)
 
-
+load metadata.mat
 fitting_method = obj.fitting_method;
 PMU = obj.PMU;
-dynamic_data = obj.dynamic_data;
-[numcontigs, numbuses, filename, timestep, numlines, differential, algebraic] = getMetadata(obj);
 
 maxfreq = obj.maxfreq;
 minfreq = obj.minfreq;
+minfreq = 0.1; %% TEMPORARY
 listvecs = cell(1,numcontigs);
 listres = cell(1,numcontigs);
 
 
 %use n4sid
-modelorder = 60;
-[empvecs, empvals]  = runN4SID(obj, modelorder);
+[empvecs, empvals]  = runN4SID(obj, modelorder, noise);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';

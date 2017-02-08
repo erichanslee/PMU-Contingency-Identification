@@ -13,7 +13,7 @@ classdef Instance
     end
     
     methods
-        [listvecs, listres, weights] = calcContig(obj)
+        [listvecs, listres, weights] = calcContig(obj, noise, modelorder)
         [scores, eigenfits] = calcContigFiltered(obj, noise, modelorder)
         [ranking, scores] = calcScores(obj, method, vecs, residuals, weights)
         [empvals, empvecs] = runN4SID(obj, modelsize, noise)

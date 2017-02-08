@@ -6,6 +6,7 @@ if(exist('numbuses', 'var') && exist('numcontigs', 'var'))
 else
     error('Metadata not initalized properly, var numbuses or numcontigs missing');
 end
+run(initfile);
 
 
 for i = 1:numcontigs
