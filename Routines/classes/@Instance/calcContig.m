@@ -34,12 +34,18 @@ for i = 1:length(empvals)
     weights(i) = norm(empvecs(:,i));
 end
 weights = weights/norm(weights);
-
+if numevals == 0
+    numevals = sum(weights > .1);
+end
 % Normalize eigenvectors
 empvecs = normalizematrix(empvecs);
 
 % Get contig eval order
-evalorder = calcEvalOrder(obj);
+if strcmp(evaluation_method, 'filtered');
+    evalorder = calcEvalOrder(obj);
+else
+    evalorder = 1:numcontigs;
+end
 
 
 
@@ -59,7 +65,7 @@ for k = 1:numcontigs
         scores(contig) = score;
         eigenfits(contig) = numfits;
         
-    % Filtering
+        % Filtering
     elseif strcmp(evaluation_method, 'filtered');
         % Calculate Backward Error (cutoff right now is 2*min)
         [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);

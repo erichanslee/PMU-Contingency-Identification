@@ -15,6 +15,10 @@
 
 function [scores, ranking, eigenfits, res] = testinstance(method, contignum, PMU, noise, modelorder, numevals)
 
+% Get PMU Matrix Indices from PMU System Indices
+PMUidx = place_PMU(contignum, PMU);
+
+
 % Check that evaluation method is okay. 
 modeList = {'all', 'filtered'};
 if(~(any(ismember(modeList, method))))
@@ -24,7 +28,7 @@ if(~(any(ismember(modeList, method))))
 end
 
 % Run Test Instance
-test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', method, PMU);
+test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', method, PMUidx);
 [scores, eigenfits] = calcContig(test, noise, modelorder, numevals);
 [~, ranking]  = sort(scores);
 res = [];

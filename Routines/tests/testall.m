@@ -1,4 +1,4 @@
-function [results, results3, confidence] = testall()
+function [results, results3] = testall()
 % Runs contig identification on all contingencies
 
 load metadata.mat
@@ -10,19 +10,12 @@ confidence = zeros(1,numbuses);
 for i = 1:numbuses
     for j = 1:numcontigs
         contig = j;
-        numberPMU = [16 1 i];
-        PMU = place_PMU(contig, numberPMU);
+        PMU = [16 1 i];
         [scores, ranking, vecs, res] = testinstance(contig, PMU);
         if(contig ==  ranking(1)) results(i) = results(i) + 1; end
         if(ismember(contig, ranking(1:3))) results3(i) = results3(i) + 1; end
-        idx = find(ismember(ranking, contig));
-        confidence(i) = confidence(i) + abs(scores(idx) - scores(1));
-
     end
 end
-
-confidence = confidence / numcontigs;
-
 numtrials = 10; 
 plot(results/numtrials, '-ob');
 hold on
