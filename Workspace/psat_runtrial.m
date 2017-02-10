@@ -11,6 +11,7 @@ function psat_runtrial(psatname, matfname, timestep)
   Settings.freq = 60;     % System frequency is 60 Hz
   Settings.fixt = 1;      % Simulate with fixed time step
   Settings.tstep = timestep ; 
+  Settings.tf = 200;
   runpsat(psatname, 'data');
   runpsat('td');          % Simulate 20 s by default
   save(matfname);
