@@ -12,13 +12,13 @@
 % score = contig id score
 % numfits = total number of eigenvector fits. 
 
-function [score, numfits] = assessContigFiltered(A, E, method, empvals, empvecs, win, cutoff, weights)
+function [score, numfits] = assessContigFiltered(A, E, method, empvals, empvecs, win, cutoff, weights, numevals)
 load metadata.mat
 score = 0;
 numfits = 0;
 [~, idx] = sort(weights, 'descend');
 
-for i = 1:length(empvals)
+for i = 1:numevals
     j = idx(i);
     
     % form variables to pass into calc_residual
@@ -52,7 +52,7 @@ end
 % residual = calculated residual
 % vec = full fitted eigenvector
 
-function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull, truevec)
+function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull)
 load metadata.mat
 
 method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted'};

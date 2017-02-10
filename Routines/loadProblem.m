@@ -1,4 +1,4 @@
-function testInstance = loadProblem(casename, contignum, fitting_method, analysis_method, PMU)
+function testInstance = loadProblem(casename, contignum, fitting_method, analysis_method, evaluation_method, PMU)
 
 testInstance = Instance;
 
@@ -25,6 +25,7 @@ testInstance.casename = casename;
 testInstance.dynamic_data = data;
 testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;
+testInstance.evaluation_method = evaluation_method; 
 testInstance.PMU = PMU;
 testInstance.minfreq = 0.5;
 testInstance.maxfreq = 10; %10 because we assume PMU sampling at 20hz and by Shannon Nyquist we should only be able to fit 10hz

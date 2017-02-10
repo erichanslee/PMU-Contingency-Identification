@@ -9,22 +9,23 @@
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % fittedvecs = fitted eigenvectors
 
-function [fittedres, fittedvecs] = assessContig(A, E, method, empvals, empvecs, win)
+function [score, numfits] = assessContig(A, E, method, empvals, empvecs, win, weights, numevals)
 load metadata.mat
-fittedvecs = zeros(differential + algebraic, length(empvals));
-fittedres = zeros(differential + algebraic, length(empvals));
+score = 0;
+numfits = length(empvals);
+[~, idx] = sort(weights, 'descend');
 
 
-for j = 1:length(empvals)
-    
-    % form variables to pass into calc_residual
+for i = 1:numevals
+    j = idx(i);
     lambda = empvals(j);
     Ashift = A-lambda*E;
     xfull = zeros(differential + algebraic,1);
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedres(:,j), fittedvecs(:,j)] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
+    [fittedres, ~] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
+    score = score + weights(j)*norm(fittedres);
 end
 end
 
@@ -43,7 +44,7 @@ end
 % residual = calculated residual
 % vec = full fitted eigenvector
 
-function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull, truevec)
+function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull)
 load metadata.mat
 
 method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted'};

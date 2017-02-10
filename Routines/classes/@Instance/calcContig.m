@@ -1,30 +1,25 @@
-%% calc_contig loads 
+%% calc_contig (Filtered Version)
 
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
-% method = method type number one would like to use
-% data = voltage readings from PMUs
-% win = indices where we see/infer voltages
-% rangerest = indices of everything else
-% noise = boolean value indicating presence of noise
+% obj = instance object
+% noise = amount of noise injected
+% modelorder = order of model for N4SID to fit
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
-% predcontig = the cotingency the chosen method predicts
-% confidence = the confidence levels for correctly identified contigs
+% scores = scores with filtering
+% eigenfits = number of eigenvectors fitted before scoring.
 
-function [listvecs, listres, weights] = calcContig(obj, noise, modelorder)
+function [scores, eigenfits] = calcContig(obj, noise, modelorder, numevals)
 
 load metadata.mat
 fitting_method = obj.fitting_method;
+evaluation_method = obj.evaluation_method;
 PMU = obj.PMU;
-
 maxfreq = obj.maxfreq;
 minfreq = obj.minfreq;
-minfreq = 0.1; %% TEMPORARY
-listvecs = cell(1,numcontigs);
-listres = cell(1,numcontigs);
 
 
-%use n4sid
+% Use n4sid
 [empvecs, empvals]  = runN4SID(obj, modelorder, noise);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
@@ -33,27 +28,50 @@ mode = 'amp';
 mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
 
-%fill weights with amplitudes
+% Fill weights with amplitudes
 weights = zeros(length(empvals), 1);
 for i = 1:length(empvals)
     weights(i) = norm(empvecs(:,i));
 end
 weights = weights/norm(weights);
 
-%normalize eigenvectors
+% Normalize eigenvectors
 empvecs = normalizematrix(empvecs);
 
+% Get contig eval order
+evalorder = calcEvalOrder(obj);
 
 
-for k = 1:numcontigs    
+
+%allocate vectors
+eigenfits = zeros(1, numcontigs);
+scores = zeros(1, numcontigs);
+min = inf;
+for k = 1:numcontigs
     % Read in matrix
-    [A,E] = obj.retrieveModel(k);
+    contig = evalorder(k);
+    [A,E] = obj.retrieveModel(contig);
     format long
     
-    %% Calculate Backward Error
-    [fittedres, fittedvecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU);
-    listvecs{k} = fittedvecs;
-    listres{k} = fittedres;
+    %No Filtering
+    if strcmp(evaluation_method, 'all');
+        [score, numfits] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
+        scores(contig) = score;
+        eigenfits(contig) = numfits;
+        
+    % Filtering
+    elseif strcmp(evaluation_method, 'filtered');
+        % Calculate Backward Error (cutoff right now is 2*min)
+        [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);
+        if score < min
+            min = score;
+        end
+        scores(contig) = score;
+        eigenfits(contig) = numfits;
+    else
+    end
+    
+    
 end
 
 
