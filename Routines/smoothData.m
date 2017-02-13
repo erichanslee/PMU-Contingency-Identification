@@ -10,7 +10,7 @@
 
 
 function dataFiltered = smoothData(data, freqCutoff, timestep, method)
-method_list = {'fft', 'gaussfilter'};
+method_list = {'fft', 'gaussfilter', 'moving', 'rloess', 'rlowess'};
 if(~(any(ismember(method_list, method))))
     error('Input a Correct Mode of Smoothing Please');
 end
@@ -24,12 +24,16 @@ for i = 1:k
             temp(freqCutoff,:) = 0;
             data(:, i) = ifft(temp);
         case 'gaussfilter';
-            g = gausswin(7); % <-- this value determines the width of the smoothing window
+            g = gausswin(5); % <-- this value determines the width of the smoothing window
             g = g/sum(g);
             data(:,i) = conv(temp, g, 'same');
-            
+        case 'moving'
+            data(:,i) = smooth(temp);
+        case 'rloess'
+            data(:,i) = smooth(temp, 'rloess');
+        case 'rlowess'
+            data(:,i) = smooth(temp, 'rlowess');
     end
 end
-
 dataFiltered = data;
 end

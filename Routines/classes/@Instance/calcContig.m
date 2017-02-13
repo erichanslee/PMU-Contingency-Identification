@@ -23,8 +23,12 @@ minfreq = obj.minfreq;
 % Add Noise
 obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussian', noise);
 
+% Smooth Data
+obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
+
 % Use n4sid
-[empvecs, empvals]  = runN4SID(obj, modelorder, noise);
+noiseparam = (noise > 0);
+[empvecs, empvals]  = runN4SID(obj, modelorder, noiseparam);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';
