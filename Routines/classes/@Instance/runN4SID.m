@@ -4,8 +4,8 @@
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 
 % method = method type number one would like to use
-% noise = percentage of max amplitude to add as gaussian noise
 % modelorder = size of model to fit
+% noise = to fit noise or not (bool value)
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 
@@ -18,11 +18,10 @@ data = obj.dynamic_data;
 
 if noise == 0
     mode = 'none';
-else
-    amp = max(abs(data)) - min(abs(data));
-    perturbation = randn(size(data))*noise*diag(amp, 0);
-    data = data + perturbation;
+elseif noise == 1
     mode = 'estimate';
+else
+    error('Noise must have value either 0 or 1');
 end
 
 len = size(data,1);

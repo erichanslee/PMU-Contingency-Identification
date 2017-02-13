@@ -4,6 +4,7 @@
 % obj = instance object
 % noise = amount of noise injected
 % modelorder = order of model for N4SID to fit
+%
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % scores = scores with filtering
@@ -18,6 +19,9 @@ PMU = obj.PMU;
 maxfreq = obj.maxfreq;
 minfreq = obj.minfreq;
 
+
+% Add Noise
+obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussian', noise);
 
 % Use n4sid
 [empvecs, empvals]  = runN4SID(obj, modelorder, noise);

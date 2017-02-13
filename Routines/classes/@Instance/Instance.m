@@ -22,7 +22,7 @@
 
 classdef Instance
     
-    properties
+    properties (Access = public)
         metadata
         casename
         fitting_method
