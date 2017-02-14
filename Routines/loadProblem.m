@@ -13,11 +13,11 @@ testInstance.metadata.differential = differential;
 testInstance.metadata.algebraic = algebraic;
 
 % Initialize testInstance.dynamic_data
-filename = sprintf('busdata%d.mat',contignum);
+filename = sprintf('busdata%d.mat',contignum);c
 load(filename);
 front_offset = 50;
 back_offset = 100;
-data = data(front_offset:(end - back_offset), PMU - (differential + numbuses));
+data = data(front_offset:(end - back_offset), PMU - differential);
 %data = data + .00001*abs(data).*randn(size(data));
 
 % Initialize rest

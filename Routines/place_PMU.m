@@ -14,7 +14,8 @@ function win = place_PMU(contignum, PMUidx)
 
 load metadata.mat
 
-rangebus = (differential + numbuses + 1):(differential + numbuses + numbuses);
+rangebusVoltage = (differential + numbuses + 1):(differential + numbuses + numbuses);
+rangebusAngle = (differential + 1):(differential + numbuses);
 run(sprintf('contig%d.m',contignum));
 Lines = Line.con(:,1:2);
 Lines(contignum,:) = [];
@@ -30,7 +31,7 @@ for i = 1:length(PMUidx)
 end
 
 PMUidx = sort(unique(Agg_Neighbor));
-win = rangebus(PMUidx);
+win = [ rangebusVoltage(PMUidx), rangebusAngle(PMUidx) ];
 
 end
 	
