@@ -14,8 +14,8 @@ offsetsteps = skip*offset/timestep + 1;
 for i = 1:numcontigs
     lname = sprintf('simfull-contig%d.mat', i);
     load(lname);
-    n = differential + numbuses + 1; 
-    data = Varout.vars(:, n:n+numbuses-1); 
+    n = differential + 1; 
+    data = Varout.vars(:, n:n+2*numbuses - 1); 
     data = data(offsetsteps:skip:end, :);
     sname = sprintf('busdata%d.mat', i);
     save(sname, 'data', 'timestep');
