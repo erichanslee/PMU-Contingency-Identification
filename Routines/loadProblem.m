@@ -13,7 +13,7 @@ testInstance.metadata.differential = differential;
 testInstance.metadata.algebraic = algebraic;
 
 % Initialize testInstance.dynamic_data
-filename = sprintf('busdata%d.mat',contignum);c
+filename = sprintf('busdata%d.mat',contignum);
 load(filename);
 front_offset = 50;
 back_offset = 100;

@@ -1,4 +1,5 @@
-Git Repository for Contingency Identification Routines.
+Git Repository for Contingency Identification Routines. For older version pre-refactor, see 
+https://github.com/ericlee0803/PowerGridsContig
 
 Installation: 
 MATLAB R2016+ 

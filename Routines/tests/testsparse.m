@@ -4,7 +4,7 @@ function [result, result3, result5, scores] = testsparse(noise)
 % Load metadata, initialize results vectors
 load metadata.mat
 modelorder = 14;
-PMU = [16 1];
+PMU = [16 20 1 ];
 evalmethod = 'all';
 numevals = 0;
 result = 0; result3 = 0; result5 = 0;
