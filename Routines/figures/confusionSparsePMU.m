@@ -8,12 +8,12 @@
 % result(n) = number of correct identifications within the n-th ranking
 % scores = matrix of scores; score(i,j) represents the score of contingency i fitted against the jacobian of contingency j. 
 
-% SUGGESTIONS: Model Order should be at least 10
 
-function [result, result3, result5, scores] = testsparse(noise, modelorder)
+function [result, result3, result5, scores] = confusionSparsePMU(noise)
 
 % Load metadata, initialize results vectors
 load metadata.mat
+modelorder = 14;
 PMU = [16 20 1 ];
 evalmethod = 'all';
 numevals = 0;
@@ -23,9 +23,13 @@ scores = zeros(numcontigs);
 for j = 1:numcontigs
     contig = j;
     [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder, numevals);
+    scores(:,j) = scores(:,j) / norm(scores(:,j));
+    scores(:,j) = scores(:,j) - scores(j,j);
     
     if(contig ==  ranking(1))
     	result = result + 1; 
+    else
+    	scores(j,j) = 2;
  	end
     
     if(ismember(contig, ranking(1:3))) 
@@ -38,14 +42,7 @@ for j = 1:numcontigs
 end
 
 
-% Plot Results
-% plot(result/numcontigs, '-ob');
-% hold on
-% plot(result3/numcontigs, '-*r');
-% ylabel('Percentage of Correct Diagnoses')
-% xlabel('Number of PMUs')
-% legend('Top 1', 'Top 3')
-% axis([1 10 0 1.5])
+imagesc(log(scores));
 
 end
 

@@ -1,21 +1,21 @@
 % Tests the impact of noise to when running N4SID on real data. 
 
-contignum = 2;
-noise = .01;
-PMU = [16 1 2 5 10 35];
+contignum = 3;
+noise = .02;
+PMU = [16 20 1 ];
 PMUidx = place_PMU(contignum, PMU);
-modelorder = 10;
+modelorder = 14;
 
 % No Noise at First
-test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', 'None', PMUidx);
-[empvecs, empvals]  = runN4SID(test, modelorder, 0);
+testclean = loadProblem('39bus', contignum, 'Weighted', 'Weighted', 'None', PMUidx);
+testnoisy = loadProblem('39bus', contignum, 'Weighted', 'Weighted', 'None', PMUidx);
+testnoisy.dynamic_data = addNoise(testnoisy.dynamic_data, 'gaussian', noise);
+
+[empvecs, empvals]  = runN4SID(testclean, modelorder, 0);
 
 % Adding Noise
-[Nempvecs, Nempvals]  = runN4SID(test, modelorder, noise);
+[Nempvecs, Nempvals]  = runN4SID(testnoisy, modelorder, 1);
+
 
 M = normalizematrix(Nempvecs)'*normalizematrix(empvecs);
 M = abs(M);
-
-% Smooth out data
-dataSmoothed = smoothData(test.dynamic_data, 100, 1/30, 'fft');
-

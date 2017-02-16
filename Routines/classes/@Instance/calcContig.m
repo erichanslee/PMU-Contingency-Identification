@@ -24,7 +24,7 @@ minfreq = obj.minfreq;
 obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussian', noise);
 
 % Smooth Data
-obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
+%obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
 
 % Use n4sid
 noiseparam = (noise > 0);
@@ -34,7 +34,7 @@ mode = 'freq';
 mode = 'amp';
 [empvecs, empvals] = filter_eigpairs(1e-8, [], empvals, empvecs, mode);
 mode = 'damp';
-[empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
+[empvecs, empvals] = filter_eigpairs(.05, 20, empvals, empvecs, mode);
 
 % Fill weights with amplitudes
 weights = zeros(length(empvals), 1);
