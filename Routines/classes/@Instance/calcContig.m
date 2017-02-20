@@ -69,7 +69,8 @@ for k = 1:numcontigs
     
     %No Filtering
     if strcmp(evaluation_method, 'all');
-        [score, numfits] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
+        [score, numfits, fittedVecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
+        save(sprintf('Results/fittedVecs%d.mat', k), 'fittedVecs');
         scores(contig) = score;
         eigenfits(contig) = numfits;
         

@@ -9,12 +9,11 @@
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % fittedvecs = fitted eigenvectors
 
-function [score, numfits] = assessContig(A, E, method, empvals, empvecs, win, weights, numevals)
+function [score, numfits, fittedVecs] = assessContig(A, E, method, empvals, empvecs, win, weights, numevals)
 load metadata.mat
 score = 0;
 numfits = length(empvals);
 [~, idx] = sort(weights, 'descend');
-
 
 for i = 1:numevals
     j = idx(i);
@@ -24,7 +23,8 @@ for i = 1:numevals
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedres, ~] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
+    [fittedres, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
+    fittedVecs(:,i) = vec;
     score = score + weights(j)*norm(fittedres);
 end
 end
@@ -77,7 +77,7 @@ switch method
         G = Ashift*T;
         
         % Calculate smallest eigenvector and then form eigenvector
-        [vs,ds] = svds(G',1,'smallest');
+        [vs,~] = svds(G',1,'smallest');
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;
@@ -92,7 +92,7 @@ switch method
         Ashift = Ashift*ctranspose(P);
         D(1:length(win)) = 1; 
         
-        % Specific to the 14 bus case
+        % Set specific weights based on unit
         curidx = 1 + length(win);
         D(curidx:curidx + 29) = .5;
         curidx = curidx + 29;
@@ -110,7 +110,7 @@ switch method
         G = Ashift*T;
         
         % Calculate smallest eigenvector and then form eigenvector
-        [vs,ds] = svds(G',1,'smallest');
+        [vs,~] = svds(G',1,'smallest');
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;

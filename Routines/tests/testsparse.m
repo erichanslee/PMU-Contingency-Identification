@@ -1,8 +1,9 @@
 % Runs contig identification on all contingencies
-% function [result, result3, result5, scores] = testsparse(noise)
+% function [result, result3, result5, scores] = testsparse(noise, modelorder)
 
 % ~~~INPUT~~~ %
 % noise = variance of noise to be added. 
+% modelorder = size of model to be fit. Make smaller = faster but less accurate
 
 % ~~~OUTPUT~~~ %
 % result(n) = number of correct identifications within the n-th ranking
@@ -14,7 +15,7 @@ function [result, result3, result5, scores] = testsparse(noise, modelorder)
 
 % Load metadata, initialize results vectors
 load metadata.mat
-PMU = [16 20 1 ];
+PMU = 1:5:30;
 evalmethod = 'all';
 numevals = 0;
 result = 0; result3 = 0; result5 = 0;
