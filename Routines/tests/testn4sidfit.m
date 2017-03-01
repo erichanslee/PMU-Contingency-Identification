@@ -1,21 +1,28 @@
 % Tests the quality of fit with N4SID. 
 
 % Initial Data and  Variables
-contignum = 1;
-noise = .0;
-PMU = [16 20 1 ];
+contignum = 3;
+noise = .05;
+PMU = [16 20 1 15];
 PMUidx = place_PMU(contignum, PMU);
 modelorder = 20;
 testclean = loadProblem('145bus', contignum, 'Weighted', 'Weighted', 'None', PMUidx);
 load metadata.mat
 timesteps = 300;
+dataNoisy = testclean.dynamic_data(100:end, :);
 data = testclean.dynamic_data(100:end, :);
+dataNoisy = addNoise(dataNoisy, 'gaussian', noise);
 
 % Start Running N4SID
-len = size(data,1);
-z = iddata(data ,zeros(len,1),timestep);
+len = size(dataNoisy,1);
+z = iddata(dataNoisy ,zeros(len,1),timestep);
 
 % set model order
+if noise > 0
+    estimate = 'estimate';
+else
+    estimate = 'none';
+end
 opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'simulation');
 [m, x0] = n4sid(z, modelorder,'Form','modal','DisturbanceModel','none', opt);
 
@@ -41,10 +48,15 @@ end
 CY = m.C*Y;
 dataFittedSim = CY';
 dataFitted = real((empvecs*V)');
-dataTrue = data(1:timesteps,:);
+dataN = dataNoisy(1:timesteps,:);
+dataT = data(1:timesteps,:);
 
+
+k = 1;
 hold on;
-plot(dataFittedSim(:,22), '-b');
-plot(dataTrue(:,22), '-r');
-
+plot(dataFittedSim(:,k), '-b');
+plot(dataN(:,k), '-r');
+plot(dataT(:, k), 'k');
+legend('Fitted', 'Noisy', 'Original');
+hold off;
 

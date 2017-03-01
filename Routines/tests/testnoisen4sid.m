@@ -1,6 +1,6 @@
 % Tests the impact of noise to when running N4SID on real data. 
 
-contignum = 3;
+contignum = 1;
 noise = .02;
 PMU = [16 20 1 ];
 PMUidx = place_PMU(contignum, PMU);
