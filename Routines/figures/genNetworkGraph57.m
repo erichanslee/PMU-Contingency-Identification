@@ -1,7 +1,7 @@
 % Generate Network Graph for Contig 1 in 39 bus System
 
 % Run contig1.m to obtain Line information
-run('contiggraph.m')
+run('contig1.m')
 
 % Generate Adjacency Matrices for main and highlighted graphs
 X1 = Line.con(:,1);

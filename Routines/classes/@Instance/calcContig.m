@@ -36,6 +36,11 @@ mode = 'amp';
 mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(.05, 20, empvals, empvecs, mode);
 
+% FOR DEBUGGING PURPOSES:
+% empvecs = empvecs + .05*randn(size(empvecs)).*empvecs;
+% empvals = empvals + .05*randn(size(empvals)).*empvals;
+
+
 % Fill weights with amplitudes
 weights = zeros(length(empvals), 1);
 for i = 1:length(empvals)

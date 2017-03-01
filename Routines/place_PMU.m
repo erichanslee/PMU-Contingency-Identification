@@ -31,7 +31,7 @@ for i = 1:length(PMUidx)
 end
 
 PMUidx = sort(unique(Agg_Neighbor));
-win = [  rangebusAngle(PMUidx)];
+win = [  rangebusAngle(PMUidx) rangebusVoltage(PMUidx)];
 
 end
 	

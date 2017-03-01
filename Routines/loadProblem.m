@@ -28,7 +28,7 @@ testInstance.analysis_method = analysis_method;
 testInstance.evaluation_method = evaluation_method; 
 testInstance.PMU = PMU;
 testInstance.minfreq = 0.5;
-testInstance.maxfreq = 10; %10 because we assume PMU sampling at 20hz and by Shannon Nyquist we should only be able to fit 10hz
+testInstance.maxfreq = 30; %10 because we assume PMU sampling at 30hz and by Shannon Nyquist we should only be able to fit 15hz
 
 % Initialize testInstance.testbank
 if(isempty(testInstance.metadata))
