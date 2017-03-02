@@ -50,7 +50,7 @@ if(report)
         figure('Visible','off');
         plot(1:length(data(:,k)), data(:,k), '-b', 1:length(dataFitted(:, k)), dataFitted(:, k), '-r');
         legend('Original', 'Fitted');
-        fname = sprintf('figures/PNG/fittingerror%d.png', k);
+        fname = sprintf('figures/images/fittingerror%d.jpeg', k);
         saveas(gcf, fname);
     end
 end

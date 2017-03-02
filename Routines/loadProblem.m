@@ -22,6 +22,7 @@ data = data(front_offset:(end - back_offset), PMU - differential);
 
 % Initialize rest
 testInstance.casename = casename;
+testInstance.correctContig = contignum;
 testInstance.dynamic_data = data;
 testInstance.fitting_method = fitting_method;
 testInstance.analysis_method = analysis_method;

@@ -1,3 +1,4 @@
+
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 
 % method = method type number one would like to use
@@ -9,23 +10,17 @@
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % fittedvecs = fitted eigenvectors
 
-function [score, numfits, fittedVecs] = assessContig(A, E, method, empvals, empvecs, win, weights, numevals)
+function [fittedRes, fittedVec] = assessContig(A, E, method, empvals, empvecs, win, numevals)
 load metadata.mat
-score = 0;
-numfits = length(empvals);
-[~, idx] = sort(weights, 'descend');
 
-for i = 1:numevals
-    j = idx(i);
+for j = 1:numevals
     lambda = empvals(j);
     Ashift = A-lambda*E;
     xfull = zeros(differential + algebraic,1);
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedres, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
-    fittedVecs(:,i) = vec;
-    score = score + weights(j)*norm(fittedres);
+    [fittedRes(:,j), fittedVec(:,j)] = calcResidual(method, Ashift, x1, win, rangerest, xfull);
 end
 end
 
@@ -90,15 +85,10 @@ switch method
         order = [win, rangerest];
         P = Ifull(order,:);
         Ashift = Ashift*ctranspose(P);
-        D(1:length(win)) = 1; 
+        D(1:length(win)) = 1;
         
         % Set specific weights based on unit
-        curidx = 1 + length(win);
-        D(curidx:curidx + 29) = .5;
-        curidx = curidx + 29;
-        D(curidx:curidx + 19) = .3;
-        curidx = curidx + 19;
-        D(curidx: curidx + 14) = .4;
+        %(UNNECESSARY FOR NOW: DATA ALREADY ALL IN PER UNIT FORM)
         
         Ashift = diag(D)*Ashift*diag(1./D);
         %[~,Ashift] = balance(Ashift);
@@ -114,7 +104,7 @@ switch method
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;
-        vec = P'*xfull; 
+        vec = P'*xfull;
         
         
     case 'OrthReg'  % Orthogonal Regularization.

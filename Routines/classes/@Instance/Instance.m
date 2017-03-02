@@ -34,6 +34,7 @@ classdef Instance
         PMU
         minfreq
         maxfreq
+        correctContig
     end
     
     methods

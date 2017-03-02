@@ -21,7 +21,7 @@ minfreq = obj.minfreq;
 
 
 % Add Noise
-obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussian', noise);
+obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussianSection', noise);
 
 % Smooth Data
 %obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
@@ -47,6 +47,11 @@ if numevals == 0
     numevals = sum(weights > .1);
 end
 
+% Sort empvecs, empvals properly
+[weights, idx] = sort(weights, 'descend');
+empvecs = empvecs(:, idx);
+empvals = empvals(idx);
+
 
 % Normalize eigenvectors
 empvecs = normalizematrix(empvecs);
@@ -58,10 +63,13 @@ else
     evalorder = 1:numcontigs;
 end
 
-%allocate vectors
+%allocate outputs
 eigenfits = zeros(1, numcontigs);
 scores = zeros(1, numcontigs);
 min = inf;
+histWeighted = zeros(numcontigs, numevals);
+histUnweighted = zeros(numcontigs, numevals);
+
 for k = 1:numcontigs
     % Read in matrix
     contig = evalorder(k);
@@ -71,12 +79,22 @@ for k = 1:numcontigs
     %No Filtering
     switch evaluation_method
         case 'all'
-            [score, numfits, fittedVecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
-            save(sprintf('Results/fittedVecs%d.mat', k), 'fittedVecs');
-            scores(contig) = score;
-            eigenfits(contig) = numfits;
             
-            % Filtering
+            % Run fitting via assessContig
+            [fittedRes, ~] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, numevals);
+            
+            % Calculate Score via Weighted Sum
+            score = 0;
+            for j = 1:numevals
+                nfr = norm(fittedRes(:,j));
+                score = score + weights(j)*nfr;
+                histWeighted(k,j) = nfr;
+                histUnweighted(k,j) = weights(j)*nfr;
+            end
+            scores(contig) = score;
+            eigenfits(contig) = numevals;
+            
+            
         case 'filtered'
             % Calculate Backward Error (cutoff right now is 2*min)
             [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);
@@ -84,8 +102,33 @@ for k = 1:numcontigs
                 min = score;
             end
             scores(contig) = score;
-            eigenfits(contig) = numfits;            
+            eigenfits(contig) = numfits;
     end
+end
+
+[~, idx] = sort(scores);
+
+% Plot graphs for report if needed
+if(report)
+    
+    %Unweighted Bar Graph
+    numbars = 20;
+    x = [1, 3:(numbars+2)];
+    y = [histUnweighted(obj.correctContig,:); histUnweighted(idx(1:numbars),:)];
+    figure('Visible','off');
+    bar(x, y, 'stacked');
+    fname = 'figures/images/histUnweighted.jpeg';
+    saveas(gcf, fname);
+    
+    %Weighted Bar Graph
+    numbars = 20;
+    x = [1, 3:(numbars+2)];
+    y = [histWeighted(obj.correctContig,:); histWeighted(idx(1:numbars),:)];
+    figure('Visible','off');
+    bar(x, y, 'stacked');
+    fname = 'figures/images/histWeighted.jpeg';
+    saveas(gcf, fname);
+
 end
 
 

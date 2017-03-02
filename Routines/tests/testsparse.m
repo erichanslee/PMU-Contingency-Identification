@@ -78,8 +78,5 @@ switch mode
         end
         result = sum(results); result3 = sum(results3); result5 = sum(results5);
 end
-
-%format scores for visualization purposes
-
 end
 

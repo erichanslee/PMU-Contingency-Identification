@@ -1,4 +1,7 @@
-% ~~~~~~~~~INPUTS~~~~~~~~~ %
+% [scores, ranking, eigenfits, res] = contingencyReport(method, contignum, PMU, noise, modelorder, numevals, reportstatus)
+% ~~~~~~~~~~~~~~~~~~~~~~~~ 
+% ~~~~~~~~~INPUTS~~~~~~~~~ 
+% ~~~~~~~~~~~~~~~~~~~~~~~~ 
 % method = whether to filter or not.
 % contignum = contingency number
 % PMU = Indices of buses PMUs can see
@@ -6,9 +9,9 @@
 % modelorder = order of model to fit to n4sid
 % numevals = number of eigenpairs to fit.
 % reportstatus = value determining whether or not to output report
-
-% ~~~~~~~~~OUTPUTS~~~~~~~~~ %
-
+% ~~~~~~~~~~~~~~~~~~~~~~~~~
+% ~~~~~~~~~OUTPUTS~~~~~~~~~
+% ~~~~~~~~~~~~~~~~~~~~~~~~~
 % scores = fit scores with filtering
 % ranking = ranking of contingencies in terms of likehood
 % eigenfits = number of fitted vectors
@@ -31,20 +34,32 @@ test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', method, PMUidx);
 res = [];
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
 
-% If Necessary, output final png of sorted scores for report
 if(report)
+    % Output final png of sorted scores for report
     figure('Visible','off');
     contigidx = find(ranking == contignum);
     plot(1:numcontigs, sort(scores), '-ob', contigidx, scores(contignum), 'or');
-    fname = 'figures/PNG/finalscores.png';
+    fname = 'figures/images/finalscores.jpeg';
     saveas(gcf, fname);
+    
+    % Output txt dump of details
+    fid = fopen('figures/images/reportdata.txt','w');
+    fprintf(fid, 'Correct Contingency: %d\n', contignum);
+    fprintf(fid, 'Identified Contingency: %d\n', ranking(1));
+    fprintf(fid, 'Noise Level: %f\n', noise');
+    fprintf(fid, 'PMU Bus Locations: %d\n', PMU');
+    fclose(fid);
+    
+    % Generate Report from Images in folder figures/images
+    if(isunix)
+       cd figures/images/
+       !python stitchreport.py
+       cd ../..
+    end
 end
 
 % Delete instance of metadata.
 clearMetadata();
 
-% Cleanup
-if(isunix)
     
-end
 end
