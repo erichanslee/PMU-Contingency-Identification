@@ -36,10 +36,6 @@ mode = 'amp';
 mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(.05, 20, empvals, empvecs, mode);
 
-% FOR DEBUGGING PURPOSES:
-% empvecs = empvecs + .05*randn(size(empvecs)).*empvecs;
-% empvals = empvals + .05*randn(size(empvals)).*empvals;
-
 
 % Fill weights with amplitudes
 weights = zeros(length(empvals), 1);
@@ -50,6 +46,8 @@ weights = weights/norm(weights);
 if numevals == 0
     numevals = sum(weights > .1);
 end
+
+
 % Normalize eigenvectors
 empvecs = normalizematrix(empvecs);
 
@@ -59,8 +57,6 @@ if strcmp(evaluation_method, 'filtered');
 else
     evalorder = 1:numcontigs;
 end
-
-
 
 %allocate vectors
 eigenfits = zeros(1, numcontigs);
@@ -73,25 +69,23 @@ for k = 1:numcontigs
     format long
     
     %No Filtering
-    if strcmp(evaluation_method, 'all');
-        [score, numfits, fittedVecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
-        save(sprintf('Results/fittedVecs%d.mat', k), 'fittedVecs');
-        scores(contig) = score;
-        eigenfits(contig) = numfits;
-        
-        % Filtering
-    elseif strcmp(evaluation_method, 'filtered');
-        % Calculate Backward Error (cutoff right now is 2*min)
-        [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);
-        if score < min
-            min = score;
-        end
-        scores(contig) = score;
-        eigenfits(contig) = numfits;
-    else
+    switch evaluation_method
+        case 'all'
+            [score, numfits, fittedVecs] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, weights, numevals);
+            save(sprintf('Results/fittedVecs%d.mat', k), 'fittedVecs');
+            scores(contig) = score;
+            eigenfits(contig) = numfits;
+            
+            % Filtering
+        case 'filtered'
+            % Calculate Backward Error (cutoff right now is 2*min)
+            [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);
+            if score < min
+                min = score;
+            end
+            scores(contig) = score;
+            eigenfits(contig) = numfits;            
     end
-    
-    
 end
 
 

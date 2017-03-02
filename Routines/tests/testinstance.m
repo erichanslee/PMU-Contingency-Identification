@@ -18,6 +18,7 @@ function [scores, ranking, eigenfits, res] = testinstance(method, contignum, PMU
 % Get PMU Matrix Indices from PMU System Indices
 PMUidx = place_PMU(contignum, PMU);
 
+
 % Run Test Instance
 test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', method, PMUidx);
 [scores, eigenfits] = calcContig(test, noise, modelorder, numevals);
