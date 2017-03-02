@@ -1,5 +1,5 @@
 % Runs contig identification on all contingencies
-% function [result, result3, result5, scores] = testsparse(noise, modelorder)
+% function [result, result3, result5, scores] = testsparse(noise, modelorder, numthreads)
 
 % ~~~INPUT~~~ %
 % noise = variance of noise to be added.
@@ -17,12 +17,13 @@ function [result, result3, result5, scores, misdiagnoses] = testsparse(noise, mo
 
 % Load metadata, initialize results vectors
 load metadata.mat
-PMU = [1 16 5 20];
+PMU = [16 1 5 20];
 evalmethod = 'all';
 numevals = 0;
 results = zeros(1, numcontigs);
 results3 = zeros(1, numcontigs);
 results5 = zeros(1, numcontigs);
+result = 0; result3 = 0; result5 = 0;
 scores = zeros(numcontigs);
 misdiagnoses = zeros(numcontigs, 3);
 % Run contingency identification for all possible contigs (numcontigs)
@@ -78,6 +79,7 @@ switch mode
         result = sum(results); result3 = sum(results3); result5 = sum(results5);
 end
 
+%format scores for visualization purposes
 
 end
 

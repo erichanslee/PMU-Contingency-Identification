@@ -5,7 +5,7 @@
 function noisydata = addNoise(data, noisetype, noisemagnitude)
 
 load metadata.mat
-regionsize = 30;
+regionsize = 50;
 [len, dim] = size(data);
 noisydata = data;
 switch noisetype
@@ -20,7 +20,7 @@ switch noisetype
             minend = min(abs(data(end-regionsize:end, i)));
             ampend = maxend - minend;
             damp = log(ampend/ampstart)/len;
-            
+                
                     % Add dampened gaussian noise
             dampvec = exp((1:len)*timestep*damp);
             noisydata(:,i) = noisydata(:,i) + (ampstart*noisemagnitude*randn(1,len).*dampvec)';
