@@ -41,6 +41,13 @@ if(report)
     plot(1:numcontigs, sort(scores), '-ob', contigidx, scores(contignum), 'or');
     fname = 'figures/images/finalscores.jpeg';
     saveas(gcf, fname);
+    close;
+    
+    % Output png of network graph for report
+    figure('Visible','off');
+    genNetworkGraph57(PMU);
+    fname = 'figures/images/networkgraph.jpeg';
+    saveas(gcf, fname);
     
     % Output txt dump of details
     fid = fopen('figures/images/reportdata.txt','w');
@@ -48,12 +55,16 @@ if(report)
     fprintf(fid, 'Identified Contingency: %d\n', ranking(1));
     fprintf(fid, 'Noise Level: %f\n', noise');
     fprintf(fid, 'PMU Bus Locations: %d\n', PMU');
+    fprintf(fid, 'Top 5 Contingencies: %d, %d, %d, %d, %d\n', ranking(1), ranking(2), ranking(3), ranking(4), ranking(5));
     fclose(fid);
     
-    % Generate Report from Images in folder figures/images
+    % Generate Report from Images in folder figures/images with python
+    % script
     if(isunix)
        cd figures/images/
        !python stitchreport.py
+       reportname = sprintf('report%d.pdf',contignum);
+       copyfile('report.pdf', reportname);
        delete *.jpeg
        delete *.txt
        cd ../..

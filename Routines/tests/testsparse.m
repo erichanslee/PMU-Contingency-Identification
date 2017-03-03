@@ -1,5 +1,5 @@
 % Runs contig identification on all contingencies
-% function [result, result3, result5, scores] = testsparse(noise, modelorder, numthreads)
+% function [result, result3, result5, scores, misdiagnoses] = testsparse(noise, modelorder, numthreads)
 
 % ~~~INPUT~~~ %
 % noise = variance of noise to be added.

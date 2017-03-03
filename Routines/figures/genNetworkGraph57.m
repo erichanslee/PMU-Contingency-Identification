@@ -1,4 +1,7 @@
 % Generate Network Graph for Contig 1 in 39 bus System
+% Takes input PMU and plots where they are
+function genNetworkGraph57(PMU)
+
 
 % Run contig1.m to obtain Line information
 run('contig1.m')
@@ -97,6 +100,10 @@ gplot(A, P, '-sk');
 
 
 for i = 1:size(P,1)
-	txt = sprintf('Bus %d',i);
+	if(ismember(i, PMU))
+		txt = sprintf('%d (PMU)',i);
+	else
+		txt = sprintf('%d',i);
+	end
 	text(P(i,1), P(i,2), txt);
 end
