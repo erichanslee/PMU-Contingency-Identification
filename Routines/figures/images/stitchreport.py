@@ -9,9 +9,21 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import *
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
+from wand.image import Image as img
 
-
-
+def stitchimage(i,j,k):
+	filenamei = 'fittingerror%d.jpeg' % i 
+	filenamej = 'fittingerror%d.jpeg' % j 
+	filenamek = 'output%d.jpeg' % k 
+	with img() as blankimage:
+	    with img(filename = filenamei) as imageA:
+	        w = imageA.width; h = imageA.height
+	        with img(filename = filenamej) as imageB:
+	            blankimage.blank(w*2, h)
+	            blankimage.composite(imageA, 0, 0)
+	            blankimage.composite(imageB, w, 0)
+	            blankimage.save(filename = filenamek)
+	return filenamek
 
 
 styles = getSampleStyleSheet()
@@ -34,9 +46,9 @@ parts.append(Image(filename, width=8.75*cm, height=6.56*cm))
 ## Add all images of fittings 
 jpegCounter = len(glob.glob1(os.getcwd() ,"*.jpeg")) - 3
 parts.append(Paragraph("Damped Exponential Fitting Plots", styles['Heading1']))
-for i in range(1, jpegCounter):
-	filename = 'fittingerror%d.jpeg' % i 
-	parts.append(Image(filename, width=8.75*cm, height=6.56*cm))	
+for i in range(1, jpegCounter/2):
+	filename = stitchimage(2*i -1, 2*i, i)
+	parts.append(Image(filename, width=2*8.75*cm, height=6.56*cm))	
 
 ## Add Histograms
 parts.append(Paragraph("Bar Plot of score distributions", styles['Heading1']))

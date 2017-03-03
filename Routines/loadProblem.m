@@ -16,7 +16,7 @@ testInstance.metadata.algebraic = algebraic;
 filename = sprintf('busdata%d.mat',contignum);
 load(filename);
 front_offset = 50;
-back_offset = 100;
+back_offset = 0;
 data = data(front_offset:(end - back_offset), PMU - differential);
 %data = data + .00001*abs(data).*randn(size(data));
 

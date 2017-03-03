@@ -26,5 +26,5 @@ subplot(3,1,3)
 plot(test.dynamic_data(40:400,1), '-k');
 legend('Clean');
 
-%[Nempvecs, Nempvals]  = runN4SID(test, modelorder, noise);
+%[Nempvecs, Nempvals, ~]  = runN4SID(test, modelorder, noise);
 

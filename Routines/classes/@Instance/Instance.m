@@ -40,7 +40,7 @@ classdef Instance
     methods
         [scores, eigenfits] = calcContig(test, noise, modelorder, numevals);    
         [ranking, scores] = calcScores(obj, method, vecs, residuals, weights)
-        [empvals, empvecs] = runN4SID(obj, modelsize, noise)
+        [empvals, empvecs, errors] = runN4SID(obj, modelsize, noise)
 
     end
 

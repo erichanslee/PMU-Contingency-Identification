@@ -54,6 +54,8 @@ if(report)
     if(isunix)
        cd figures/images/
        !python stitchreport.py
+       delete *.jpeg
+       delete *.txt
        cd ../..
     end
 end

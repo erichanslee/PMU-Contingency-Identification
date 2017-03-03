@@ -13,6 +13,7 @@ switch noisetype
     %Add noise by estimating dampening factor
     case 'gaussianDamp'        
         for i = 1:dim
+            
             % Estimate Dampening Factor
             maxstart = max(abs(data(1:regionsize, i)));
             minstart = min(abs(data(1:regionsize, i)));
@@ -21,6 +22,7 @@ switch noisetype
             minend = min(abs(data(end-regionsize:end, i)));
             ampend = maxend - minend;
             damp = log(ampend/ampstart)/len;            
+            
             % Add dampened gaussian noise
             dampvec = exp((1:len)*timestep*damp);
             noisydata(:,i) = noisydata(:,i) + (ampstart*noisemagnitude*randn(1,len).*dampvec)';
@@ -42,7 +44,12 @@ switch noisetype
         
     % Represents some sort of constant noise, perhaps from sensors
     case 'gaussianConstant'
-        mag = max(max(abs(data))) - min(min(abs(Data)));
-        noisydata = noisemagnitude*mag*randn(size(data)).*data + data;
+        for i = 1:dim            
+            % Find Amplitude
+            amp = max(abs(data(:, i))) - min(abs(data(:, i)));
+            
+            % Add dampened gaussian noise
+            noisydata(:,i) = noisydata(:,i) + amp*noisemagnitude*randn(1,len)';
+        end
 end
 

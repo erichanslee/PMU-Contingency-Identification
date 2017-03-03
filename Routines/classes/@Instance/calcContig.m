@@ -21,14 +21,14 @@ minfreq = obj.minfreq;
 
 
 % Add Noise
-obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussianSection', noise);
+obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussianConstant', noise);
 
 % Smooth Data
 %obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
 
 % Use n4sid
 noiseparam = (noise > 0);
-[empvecs, empvals]  = runN4SID(obj, modelorder, noiseparam);
+[empvecs, empvals, errors]  = runN4SID(obj, modelorder, noiseparam);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';
@@ -37,18 +37,22 @@ mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(.05, 20, empvals, empvecs, mode);
 
 
-% Fill weights with amplitudes
-weights = zeros(length(empvals), 1);
+% Weights for fitting
+%weightsFit = -(log10(errors) + 1);
+weightsFit = ones(size(errors));
+
+% Fill weightsScore with amplitudes
+weightsScore = zeros(length(empvals), 1);
 for i = 1:length(empvals)
-    weights(i) = norm(empvecs(:,i));
+    weightsScore(i) = norm(empvecs(:,i));
 end
-weights = weights/norm(weights);
+weightsScore = weightsScore/norm(weightsScore);
 if numevals == 0
-    numevals = sum(weights > .1);
+    numevals = sum(weightsScore > .1);
 end
 
 % Sort empvecs, empvals properly
-[weights, idx] = sort(weights, 'descend');
+[weightsScore, idx] = sort(weightsScore, 'descend');
 empvecs = empvecs(:, idx);
 empvals = empvals(idx);
 
@@ -81,15 +85,15 @@ for k = 1:numcontigs
         case 'all'
             
             % Run fitting via assessContig
-            [fittedRes, ~] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, numevals);
+            [fittedRes, ~] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
             
             % Calculate Score via Weighted Sum
             score = 0;
             for j = 1:numevals
                 nfr = norm(fittedRes(:,j));
-                score = score + weights(j)*nfr;
+                score = score + weightsScore(j)*nfr;
                 histWeighted(k,j) = nfr;
-                histUnweighted(k,j) = weights(j)*nfr;
+                histUnweighted(k,j) = weightsScore(j)*nfr;
             end
             scores(contig) = score;
             eigenfits(contig) = numevals;
@@ -97,7 +101,7 @@ for k = 1:numcontigs
             
         case 'filtered'
             % Calculate Backward Error (cutoff right now is 2*min)
-            [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weights, numevals);
+            [score, numfits] = assessContigFiltered(A, E, fitting_method, empvals, empvecs, PMU, 1.1*min, weightsScore, numevals);
             if score < min
                 min = score;
             end

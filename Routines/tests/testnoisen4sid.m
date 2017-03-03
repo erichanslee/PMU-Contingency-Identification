@@ -11,10 +11,10 @@ testclean = loadProblem('39bus', contignum, 'Weighted', 'Weighted', 'None', PMUi
 testnoisy = loadProblem('39bus', contignum, 'Weighted', 'Weighted', 'None', PMUidx);
 testnoisy.dynamic_data = addNoise(testnoisy.dynamic_data, 'gaussian', noise);
 
-[empvecs, empvals]  = runN4SID(testclean, modelorder, 0);
+[empvecs, empvals, ~]  = runN4SID(testclean, modelorder, 0);
 
 % Adding Noise
-[Nempvecs, Nempvals]  = runN4SID(testnoisy, modelorder, 1);
+[Nempvecs, Nempvals, ~]  = runN4SID(testnoisy, modelorder, 1);
 
 
 M = normalizematrix(Nempvecs)'*normalizematrix(empvecs);
