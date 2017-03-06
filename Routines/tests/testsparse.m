@@ -13,11 +13,11 @@
 
 % SUGGESTIONS: Model Order should be at least 10
 
-function [result, result3, result5, scores, misdiagnoses] = testsparse(noise, modelorder, mode)
+function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, noise, modelorder, mode)
 
 % Load metadata, initialize results vectors
 load metadata.mat
-PMU = [16 1 5 20];
+
 evalmethod = 'all';
 numevals = 0;
 results = zeros(1, numcontigs);

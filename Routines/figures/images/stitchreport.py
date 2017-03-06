@@ -51,7 +51,7 @@ parts.append(Image(filename, width=8.75*cm, height=6.56*cm))
 ## Add all images of fittings 
 jpegCounter = len(glob.glob1(os.getcwd() ,"*.jpeg")) - 3
 parts.append(Paragraph("Damped Exponential Fitting Plots", styles['Heading1']))
-for i in range(1, jpegCounter/2 - 1):
+for i in range(1, jpegCounter/2 + 1):
 	filename = stitchimage(2*i -1, 2*i, i)
 	parts.append(Image(filename, width=2*8.75*cm, height=6.56*cm))	
 
