@@ -39,18 +39,18 @@ if(report)
     figure('Visible','off');
     contigidx = find(ranking == contignum);
     plot(1:numcontigs, sort(scores), '-ob', contigidx, scores(contignum), 'or');
-    fname = 'figures/images/finalscores.jpeg';
+    fname = 'reporting/finalscores.jpeg';
     saveas(gcf, fname);
     close;
     
     % Output png of network graph for report
     figure('Visible','off');
     genNetworkGraph57(PMU);
-    fname = 'figures/images/networkgraph.jpeg';
+    fname = 'reporting/networkgraph.jpeg';
     saveas(gcf, fname);
     
     % Output txt dump of details
-    fid = fopen('figures/images/reportdata.txt','w');
+    fid = fopen('reporting/reportdata.txt','w');
     fprintf(fid, 'Correct Contingency: %d\n', contignum);
     fprintf(fid, 'Identified Contingency: %d\n', ranking(1));
     fprintf(fid, 'Noise Level: %f\n', noise');
@@ -58,16 +58,16 @@ if(report)
     fprintf(fid, 'Top 5 Contingencies: %d, %d, %d, %d, %d\n', ranking(1), ranking(2), ranking(3), ranking(4), ranking(5));
     fclose(fid);
     
-    % Generate Report from Images in folder figures/images with python
+    % Generate Report from Images in folder reporting with python
     % script
     if(isunix)
-       cd figures/images/
+       cd reporting/
        !python stitchreport.py
        reportname = sprintf('report%d.pdf',contignum);
        copyfile('report.pdf', reportname);
        delete *.jpeg
        delete *.txt
-       cd ../..
+       cd ..
     end
 end
 

@@ -10,25 +10,23 @@ if(size(vals,1) ~= 1 && size(vals,2) ~= 1)
     vals = diag(vals);
 end
 
-% Filter by frequency i.e. imaginary part of eigenvalue
-if(strcmp('freq',mode))
-    rangepairs = find(abs(imag(vals)/pi) >= minbound & abs(imag(vals)/pi) <= maxbound);
+switch mode
     
-% Filter by dampening factor i.e. real part of eigenvalue
-elseif(strcmp('damp',mode))
-    rangepairs = find(abs(real(vals)) >= minbound & abs(real(vals)) <= maxbound);
-    
-% Get rid of low amplitude modes i.e. norms of eigenvectors
-elseif(strcmp('amp',mode))
-    norms = zeros(1, length(vals));
-    for i = 1:length(vals)
-        norms(i) = norm(vecs(:,i));
-    end
-        rangepairs = find(abs(real(vals)) >= minbound);   
+    % Filter by frequency i.e. imaginary part of eigenvalue
+    case 'freq'
+        rangepairs = find(abs(imag(vals)/pi) >= minbound & abs(imag(vals)/pi) <= maxbound);
         
-% Else return an error
-else
-    error('Incorrect mode entered. Mode must be either "freq" or "damp"');
+        % Filter by dampening factor i.e. real part of eigenvalue
+    case 'damp'
+        rangepairs = find(abs(real(vals)) >= minbound & abs(real(vals)) <= maxbound);
+        
+        % Get rid of low amplitude modes i.e. norms of eigenvectors
+    case 'amp'
+        norms = zeros(1, length(vals));
+        for i = 1:length(vals)
+            norms(i) = norm(vecs(:,i));
+        end
+        rangepairs = find(abs(norms) >= minbound);
 end
 
 %Filter and Sort eigenpairs

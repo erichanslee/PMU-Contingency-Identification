@@ -5,7 +5,7 @@
 function noisydata = addNoise(data, noisetype, noisemagnitude)
 
 load metadata.mat
-regionsize = 50;
+regionsize = 10;
 [len, dim] = size(data);
 noisydata = data;
 switch noisetype

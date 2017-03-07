@@ -57,10 +57,10 @@ if(report)
     for k = 1:dim;
         ymax = max(data(:,k)); ymin = min(data(:,k));
         xmin = 0; xmax = length(data(:,k));
-        plot(1:length(data(:,k)), data(:,k), '-b', 1:length(dataFitted(:, k)), dataFitted(:, k), '-r');
+        plot(1:length(data(:,k)), data(:,k), '-o', 1:length(dataFitted(:, k)), dataFitted(:, k), '-sr');
         axis([xmin, xmax, ymin, ymax]);
         legend('Original', 'Fitted');
-        fname = sprintf('reporting/fittingerror%d.jpeg', k);
+        fname = sprintf('figures/images/fittingerror%d.jpeg', k);
         saveas(gcf, fname);
     end
 end
