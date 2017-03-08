@@ -52,7 +52,6 @@ end
 
 % If report variable is true (report configured in metadata.mat), print out pngs
 if(report)
-    
     figure('Visible','off');
     for k = 1:dim;
         ymax = max(data(:,k)); ymin = min(data(:,k));

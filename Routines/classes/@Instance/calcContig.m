@@ -21,14 +21,14 @@ minfreq = obj.minfreq;
 
 if(report)
     noiseparam = 0;
-    ampparam = 0.01;
+    ampparam = 0.0;
     [empvecsClean, empvalsClean, ~]  = runN4SID(obj, modelorder, noiseparam);
     mode = 'freq';
     [empvecsClean, empvalsClean] = filter_eigpairs(minfreq, maxfreq, empvalsClean, empvecsClean, mode);
     mode = 'amp';
     [empvecsClean, empvalsClean] = filter_eigpairs(ampparam, [], empvalsClean, empvecsClean, mode);
     mode = 'damp';
-    [empvecsClean, empvalsClean] = filter_eigpairs(.05, 20, empvalsClean, empvecsClean, mode);
+    [empvecsClean, empvalsClean] = filter_eigpairs(0, 20, empvalsClean, empvecsClean, mode);
 end
 
 % Add Noise
@@ -39,14 +39,14 @@ obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussianSection', noise);
 
 % Use n4sid
 noiseparam = (noise > 0);
-ampparam = 0.01;
+ampparam = 0.0;
 [empvecs, empvals, errors]  = runN4SID(obj, modelorder, noiseparam);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';
 [empvecs, empvals] = filter_eigpairs(ampparam, [], empvals, empvecs, mode);
 mode = 'damp';
-[empvecs, empvals] = filter_eigpairs(.05, 20, empvals, empvecs, mode);
+[empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
 
 % Weights for fitting
 %weightsFit = -(log10(errors) + 1);
@@ -94,7 +94,6 @@ for k = 1:numcontigs
     %No Filtering
     switch evaluation_method
         case 'all'
-            
             % Run fitting via assessContig
             [fittedRes, ~] = assessContig(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
             
@@ -109,6 +108,21 @@ for k = 1:numcontigs
             scores(contig) = score;
             eigenfits(contig) = numevals;
             
+        case 'forward'
+            
+            % Run fitting via assessContig
+            [fittedRes, ~] = assessContigForward(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
+            
+            % Calculate Score via Weighted Sum
+            score = 0;
+            for j = 1:numevals
+                nfr = norm(fittedRes(:,j));
+                score = score + weightsScore(j)*nfr;
+                histWeighted(k,j) = weightsScore(j)*nfr;
+                histUnweighted(k,j) = nfr;
+            end
+            scores(contig) = score;
+            eigenfits(contig) = numevals;
             
         case 'filtered'
             % Calculate Backward Error (cutoff right now is 2*min)
@@ -126,14 +140,16 @@ end
 if(report)
     
     
-    [empvals, idx] = sort(abs(empvals), 'descend');
-    [empvalsClean, idxClean] = sort(abs(empvalsClean), 'descend');
+    [~, idx] = sort(abs(empvals), 'descend');
+    empvals = empvals(idx);
+    [~, idxClean] = sort(abs(empvalsClean), 'descend');
+    empvalsClean = empvalsClean(idxClean);
     empvecs = empvecs(:, idx);
     empvecsClean = empvecsClean(:, idxClean);
     plotEigvals(empvalsClean, empvals);
     plotEigvecs(empvecsClean, empvecs);
     
-    [~, idx] = sort(scores);    
+    [~, idx] = sort(scores);
     %Unweighted Bar Graph
     numbars = 20;
     x = [1, 3:(numbars+2)];

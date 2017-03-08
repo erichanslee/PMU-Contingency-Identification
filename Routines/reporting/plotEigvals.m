@@ -24,7 +24,6 @@ for i = 1:length(shifted_Eigvals)
     plot(real(shifted_Eigvals), imag(shifted_Eigvals), '+r');
 end
 
-legend('Unit Circle', 'Original Eigenvalues', 'Shifted Eigenvalues');
 fname = 'reporting/eigenvaluesPlot.jpeg';
 saveas(gcf, fname);
 hold off;

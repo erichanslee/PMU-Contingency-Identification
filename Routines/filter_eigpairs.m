@@ -18,7 +18,7 @@ switch mode
         
         % Filter by dampening factor i.e. real part of eigenvalue
     case 'damp'
-        rangepairs = find(abs(real(vals)) >= minbound & abs(real(vals)) <= maxbound);
+        rangepairs = find(-real(vals) >= minbound & -real(vals) <= maxbound);
         
         % Get rid of low amplitude modes i.e. norms of eigenvectors
     case 'amp'

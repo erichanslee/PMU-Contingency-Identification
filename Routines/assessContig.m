@@ -23,11 +23,10 @@ fittedVec = zeros(size(A, 1), numevals);
 for j = 1:numevals
     lambda = empvals(j);
     Ashift = A-lambda*E;
-    xfull = zeros(differential + algebraic,1);
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedRes(:,j), fittedVec(:,j)] = calcResidual(method, Ashift, x1, win, rangerest, xfull, weights);
+    [fittedRes(:,j), fittedVec(:,j)] = calcResidual(method, Ashift, x1, win, rangerest, weights);
 end
 end
 %
@@ -46,15 +45,10 @@ end
 % residual = calculated residual
 % vec = full fitted eigenvector
 
-function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull, weights)
+function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, weights)
 load metadata.mat
 
-method_list = {'Unconstrained', 'Constrained', 'OrthReg', 'Weighted'};
-if(~(any(ismember(method_list, method))))
-    disp('No Fitting Method Listed, Please Choose from the following list');
-    disp(method_list);
-    error('Input Error');
-end
+xfull = zeros(length(win) + length(rangerest), 1);
 
 switch method
     case 'Unconstrained'
