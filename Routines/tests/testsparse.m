@@ -18,7 +18,7 @@ function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, nois
 % Load metadata, initialize results vectors
 load metadata.mat
 
-evalmethod = 'all';
+evalmethod = 'forward';
 numevals = 0;
 results = zeros(1, numcontigs);
 results3 = zeros(1, numcontigs);
@@ -36,6 +36,7 @@ switch mode
             
             if(contig ==  ranking(1))
                 result = result + 1;
+            else
                 M = zeros(1,3);
                 M(1,1) = ranking(1);
                 M(1,2) = contig;

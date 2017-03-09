@@ -91,7 +91,6 @@ for k = 1:numcontigs
     [A,E] = obj.retrieveModel(contig);
     format long
     
-    %No Filtering
     switch evaluation_method
         case 'all'
             % Run fitting via assessContig
