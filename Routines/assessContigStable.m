@@ -14,7 +14,7 @@
 % fittedVecs = fitted eigenvectors
 % fittedRes = residuals from fittedVecs
 
-function [fittedRes, fittedVec] = assessContigForward(A, E, method, empvals, empvecs, win, numevals, weights)
+function [fittedRes, fittedVec] = assessContigStable(A, E, method, empvals, empvecs, win, numevals, weights)
 load metadata.mat
 
 for j = 1:numevals

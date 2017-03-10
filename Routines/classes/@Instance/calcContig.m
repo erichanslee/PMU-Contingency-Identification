@@ -107,10 +107,10 @@ for k = 1:numcontigs
             scores(contig) = score;
             eigenfits(contig) = numevals;
             
-        case 'forward'
+        case 'stable'
             
             % Run fitting via assessContig
-            [fittedRes, ~] = assessContigForward(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
+            [fittedRes, ~] = assessContigStable(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
             
             % Calculate Score via Weighted Sum
             score = 0;
