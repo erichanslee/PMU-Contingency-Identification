@@ -101,7 +101,7 @@ switch method
         G = Ashift*T;
         
         % Calculate smallest eigenvector and then form eigenvector
-        [vs,~] = svds(G',1,'smallest');
+        [vs,alpha] = svds(G',1,'smallest');
         xfull(1:length(win)) = vs(1)*x1;
         xfull((length(win)+1):end) = vs(2:end);
         residual = Ashift*xfull;

@@ -22,7 +22,9 @@ minfreq = obj.minfreq;
 if(report)
     noiseparam = 0;
     ampparam = 0.0;
-    [empvecsClean, empvalsClean, ~]  = runN4SID(obj, modelorder, noiseparam);
+    %[empvecsClean, empvalsClean, ~]  = runN4SID(obj.dynamic_data, modelorder, noiseparam);\
+    fname = sprintf('n4sidDataNoise0Contig%d.mat',obj.correctContig);
+    load(fname);
     mode = 'freq';
     [empvecsClean, empvalsClean] = filter_eigpairs(minfreq, maxfreq, empvalsClean, empvecsClean, mode);
     mode = 'amp';
@@ -31,16 +33,18 @@ if(report)
     [empvecsClean, empvalsClean] = filter_eigpairs(0, 20, empvalsClean, empvecsClean, mode);
 end
 
-% Add Noise
-obj.dynamic_data = addNoise(obj.dynamic_data, 'gaussianSection', noise);
+try
+    fname = sprintf('n4sidDataNoise%dContig%d.mat',noise*100,  obj.correctContig);
+    load(fname);
+catch
+    error('The Amount of Error Added is not supported when loading N4SID Data');
+end 
 
 % Smooth Data
 %obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
 
-% Use n4sid
-noiseparam = (noise > 0);
+% Filter N4SID Data that has just been loaded
 ampparam = 0.0;
-[empvecs, empvals, errors]  = runN4SID(obj, modelorder, noiseparam);
 mode = 'freq';
 [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
 mode = 'amp';
@@ -49,7 +53,6 @@ mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
 
 % Weights for fitting
-%weightsFit = -(log10(errors) + 1);
 weightsFit = ones(size(errors));
 
 % Fill weightsScore with amplitudes

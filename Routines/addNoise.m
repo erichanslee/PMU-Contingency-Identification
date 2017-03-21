@@ -1,7 +1,15 @@
+% function noisydata = addNoise(data, noisetype, noisemagnitude)
+%
 % addNoise is self explanatory; it adds noise of type
 % noisetype and amplitude noisemagnitude to a time-domain signal
-
-
+%
+%~~~~~ INPUTS ~~~~~~~~
+%data = time domain data
+%noisetype = 'gaussianDamp', 'gaussianSection' or 'gaussianConstant'
+%noisemagnitude = magnitude of noise
+%
+%~~~~~ OUTPUTS ~~~~~~~   
+%noisydata = time domain data with noise added
 function noisydata = addNoise(data, noisetype, noisemagnitude)
 
 load metadata.mat

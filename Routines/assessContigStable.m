@@ -20,11 +20,10 @@ load metadata.mat
 for j = 1:numevals
     lambda = empvals(j);
     Ashift = A-lambda*E;
-    xfull = zeros(differential + algebraic,1);
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedRes(j), fittedVec(:,j)] = calcResidual('forward', Ashift, x1, win, rangerest, xfull, weights);
+    [fittedRes(j), fittedVec(:,j)] = calcResidual('forward', Ashift, x1, win, rangerest);
 end
 end
 %
@@ -43,11 +42,16 @@ end
 % residual = calculated residual
 % vec = full fitted eigenvector
 
-function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest, xfull, weights)
+function [residual, vec] = calcResidual(method, Ashift, x1, win, rangerest)
 load metadata.mat
 switch method
+    case 'simple'
+        sigma = svds(Ashift',1,'smallest');
+        residual = sigma;
+        vec = x1;
+    
     case 'backward'
-        [vs,sigma] = svds(Ashift',1,'smallest');
+        [vs,~] = svds(Ashift',1,'smallest');
         x2 = vs(rangerest);
         ax1 = Ashift(:,win)*x1;
         ax2 = Ashift(:,rangerest)*x2;
@@ -59,10 +63,14 @@ switch method
         vec = [x1; x2];
         
     case 'forward'
-        [vs,sigma] = svds(Ashift',1,'smallest');
-        vs_win = vs(win);
-        vs_win = normalizematrix(vs_win);
-        residual = 1 - abs(x1'*vs_win);
-        vec = vs_win;
+        [vs, ds] = eig(Ashift);
+        ds = diag(abs(ds));
+        [~,idx] = sort(ds,'ascend');
+        vs = vs(:,idx(1:5));
+        vs_win = vs(win,:);
+        [Q,~] = qr(vs_win);
+        c = Q'*x1;
+        residual = 1-max(abs(c));
+        vec = c;
 end
 end
