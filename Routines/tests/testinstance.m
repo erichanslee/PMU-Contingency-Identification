@@ -1,3 +1,4 @@
+% function [scores, ranking, eigenfits, res] = testinstance(method, contignum, PMU, noise, modelorder, numevals)
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % method = whether to filter or not. 
 % contignum = contingency number
@@ -5,9 +6,9 @@
 % noise = percentage of noise to add to dynamic data
 % modelorder = order of model to fit to n4sid
 % numevals = number of eigenpairs to fit. 
-
+%
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
-
+%
 % scores = fit scores with filtering
 % ranking = ranking of contingencies in terms of likehood
 % eigenfits = number of fitted vectors 

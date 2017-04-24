@@ -1,7 +1,7 @@
 % Class Instance
 
 % ~~~PROPERTIES~~~%
-
+%
 % metadata = Information about System including number of buses, lines, etc
 % casename = Name of Power System (e.g. "39 bus") we are running test on
 % fitting_method = fitting method used to fit eigenpairs
@@ -13,9 +13,9 @@
 % PMU = Indices of PMU Locations, relative to System
 % minfreq = Minimum Frequency to Filter Fitted Eigenpairs by
 % maxfreq = Maximum Frequency to Filter Fitten Eigenpairs by
-
+%
 % ~~~METHODS~~~ %
-
+%
 % calcContig = Eigenvector Fitting Procedure
 % calcScores = 
 % runN4SID = self explanatory, wrapped for MATLABS n4sid procedure

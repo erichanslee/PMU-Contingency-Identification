@@ -1,19 +1,19 @@
 % Runs contig identification on all contingencies
 % function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, noise, modelorder, numthreads)
-
+%
 % ~~~INPUT~~~ %
 % noise = variance of noise to be added.
 % modelorder = size of model to be fit. Make smaller = faster but less accurate
-% mode = tell to run serially or in parallel
-
+% numthreads = tell to run serially or in parallel
+%
 % ~~~OUTPUT~~~ %
 % result(n) = number of correct identifications within the n-th ranking
 % scores = matrix of scores; score(i,j) represents the score of contingency i fitted against the jacobian of contingency j.
 % misdiagnoses = k x 3 matrix of misdiagnoses [incorrect x correct x ranking]
-
+%
 % SUGGESTIONS: Model Order should be at least 10
-
-function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, noise, modelorder, mode)
+%
+function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, noise, modelorder, numthreads)
 
 % Load metadata, initialize results vectors
 load metadata.mat
@@ -28,8 +28,7 @@ scores = zeros(numcontigs);
 misdiagnoses = zeros(numcontigs, 3);
 % Run contingency identification for all possible contigs (numcontigs)
 
-switch mode
-    case 'serial'
+if(numthreads == 1)
         for j = 1:numcontigs
             contig = j;
             [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder, numevals);
@@ -54,7 +53,8 @@ switch mode
         end
         
         
-    case 'parallel'
+else
+        parpool(numthreads);
         parfor j = 1:numcontigs
             contig = j;
             [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder, numevals);

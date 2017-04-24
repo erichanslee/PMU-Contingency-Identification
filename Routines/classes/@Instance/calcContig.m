@@ -41,7 +41,7 @@ catch
 end 
 
 % Smooth Data
-%obj.dynamic_data = smoothData(obj.dynamic_data, 2, 1/30, 'gaussfilter');
+%obj.dynamic_data = smoothData(obj.dynamci_data, 2, 1/30, 'gaussfilter');
 
 % Filter N4SID Data that has just been loaded
 ampparam = 0.0;
@@ -53,7 +53,7 @@ mode = 'damp';
 [empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
 
 % Weights for fitting
-weightsFit = ones(size(errors));
+weightsFit = ones(size(empvecs,1),1);
 
 % Fill weightsScore with amplitudes
 weightsScore = zeros(length(empvals), 1);
@@ -62,9 +62,8 @@ for i = 1:length(empvals)
 end
 weightsScore = weightsScore/norm(weightsScore);
 if numevals == 0
-    numevals = length(weightsScore);
+    numevals = sum(weightsScore > .05);
 end
-
 % Sort empvecs, empvals properly
 [weightsScore, idx] = sort(weightsScore, 'descend');
 empvecs = empvecs(:, idx);
@@ -88,12 +87,11 @@ min = inf;
 histWeighted = zeros(numcontigs, numevals);
 histUnweighted = zeros(numcontigs, numevals);
 
+format long
 for k = 1:numcontigs
     % Read in matrix
     contig = evalorder(k);
     [A,E] = obj.retrieveModel(contig);
-    format long
-    
     switch evaluation_method
         case 'all'
             % Run fitting via assessContig
@@ -111,7 +109,6 @@ for k = 1:numcontigs
             eigenfits(contig) = numevals;
             
         case 'stable'
-            
             % Run fitting via assessContig
             [fittedRes, ~] = assessContigStable(A, E, fitting_method, empvals, empvecs, PMU, numevals, weightsFit);
             
@@ -141,7 +138,7 @@ end
 % Plot graphs for report if needed
 if(report)
     
-    
+    % Clean up Data
     [~, idx] = sort(abs(empvals), 'descend');
     empvals = empvals(idx);
     [~, idxClean] = sort(abs(empvalsClean), 'descend');
@@ -150,9 +147,9 @@ if(report)
     empvecsClean = empvecsClean(:, idxClean);
     plotEigvals(empvalsClean, empvals);
     plotEigvecs(empvecsClean, empvecs);
-    
     [~, idx] = sort(scores);
-    %Unweighted Bar Graph
+
+    % Make Unweighted Bar Graph
     numbars = 20;
     x = [1, 3:(numbars+2)];
     y = [histUnweighted(obj.correctContig,:); histUnweighted(idx(1:numbars),:)];
@@ -161,7 +158,7 @@ if(report)
     fname = 'reporting/histUnweighted.jpeg';
     saveas(gcf, fname);
     
-    %Weighted Bar Graph
+    % Make Weighted Bar Graph
     numbars = 20;
     x = [1, 3:(numbars+2)];
     y = [histWeighted(obj.correctContig,:); histWeighted(idx(1:numbars),:)];

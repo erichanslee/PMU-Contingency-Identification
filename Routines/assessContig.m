@@ -107,9 +107,24 @@ switch method
         residual = Ashift*xfull;
         vec = P'*xfull;
         
-        
-    case 'OrthReg'  % Orthogonal Regularization.
-        
+
+    case 'FullLS'
+
+        %% Form Matrices
+        Ifull = eye(differential + algebraic);
+        order = [win, rangerest];
+        P = Ifull(order,:);
+        Ashift = Ashift*ctranspose(P);
+        H = zeros(size(x1), differential + algebraic);
+        H(1:size(x1), 1:size(x1)) = eye(size(x1));
+
+        % Solve Mx=b
+        M = [H; Ashift ];
+        b = [x1; zeros(differential + algebraic, 1)];
+
+        vec = M\b;
+        residual = norm(M*vec - b);
+
         
 end
 

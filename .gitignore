@@ -1,3 +1,5 @@
 Routines/data/39bus/*.csv
+Routines/data/57bus/*.mat
 Report/*.png
 Workspace/145bus/*.mat
+Routines/figures/images/*.pdf

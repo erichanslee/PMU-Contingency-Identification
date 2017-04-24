@@ -23,7 +23,7 @@ for j = 1:numevals
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
-    [fittedRes(j), fittedVec(:,j)] = calcResidual('forward', Ashift, x1, win, rangerest);
+    [fittedRes(j), fittedVec(:,j)] = calcResidual('FullLS', Ashift, x1, win, rangerest);
 end
 end
 %
@@ -51,26 +51,51 @@ switch method
         vec = x1;
     
     case 'backward'
-        [vs,~] = svds(Ashift',1,'smallest');
+        opts.tol = 1e-4;
+        [T,Bshift] = balance(Ashift);
+        try
+            [bvs,~] = eigs(Bshift - 1e-1*eye(size(Bshift)),1,'SM', opts);
+        catch
+            display(rcond(Bshift - 1e-1));
+            error('Problem with Conditioning of Matrix')
+        end
+        vs = T*bvs;
         x2 = vs(rangerest);
         ax1 = Ashift(:,win)*x1;
         ax2 = Ashift(:,rangerest)*x2;
         alpha = -(ax1'*ax2)/(ax1'*ax1);
-        x = zeros(size(Ashift,1),1);
-        x(win) = alpha*x1;
+        x = zeros(size(Ashift,1),1)
+;        x(win) = alpha*x1;
         x(rangerest) = x2;
         residual = norm(Ashift*x);
         vec = [x1; x2];
         
     case 'forward'
-        [vs, ds] = eig(Ashift);
-        ds = diag(abs(ds));
-        [~,idx] = sort(ds,'ascend');
-        vs = vs(:,idx(1:5));
+        [T,Bshift] = balance(Ashift);
+        [bvs,~] = eigs(Bshift - 1e-1*eye(size(Bshift)),1,'SM');
+        vs = T*bvs;
         vs_win = vs(win,:);
-        [Q,~] = qr(vs_win);
-        c = Q'*x1;
+        vs_win = normalizematrix(vs_win);
+        c = vs_win'*x1;
         residual = 1-max(abs(c));
         vec = c;
+
+    case 'FullLS'
+
+        %% Form Matrices
+        Ifull = eye(differential + algebraic);
+        order = [win, rangerest];
+        P = Ifull(order,:);
+        Ashift = Ashift*ctranspose(P);
+        H = zeros(length(win), differential + algebraic);
+        H(1:length(win), 1:length(win)) = eye(length(win));
+
+        % Solve Mx=b
+        M = [H; Ashift ];
+        b = [x1; zeros(differential + algebraic, 1)];
+
+        vec = M\b;
+        residual = norm(M*vec - b);
+
 end
 end
