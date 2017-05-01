@@ -17,9 +17,21 @@
 function [fittedRes, fittedVec] = assessContigStable(A, E, method, empvals, empvecs, win, numevals, weights)
 load metadata.mat
 
+
+% Form Discrete Algebraic Equations
+%A11 = A(1:differential, 1:differential);
+%A12 = A(1:differential, differential+1:differential+algebraic);
+%A21 = A(differential+1:differential+algebraic, 1:differential);
+%A22 = A(differential+1:differential+algebraic, differential+1:differential+algebraic);
+%As = A11 - A12*(A22\A21);
+%Ash = expm(As*0.05);
+%Ah = [Ash, zeros(size(A12)); A21, A22];
+
+% Solve
 for j = 1:numevals
     lambda = empvals(j);
-    Ashift = A-lambda*E;
+    lambdah =    exp(lambda*.05);
+    Ashift = A - lambda*E;
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
     rangerest = rangerest(~ismember(rangerest, win));
@@ -64,8 +76,8 @@ switch method
         ax1 = Ashift(:,win)*x1;
         ax2 = Ashift(:,rangerest)*x2;
         alpha = -(ax1'*ax2)/(ax1'*ax1);
-        x = zeros(size(Ashift,1),1)
-;        x(win) = alpha*x1;
+        x = zeros(size(Ashift,1),1);
+        x(win) = alpha*x1;
         x(rangerest) = x2;
         residual = norm(Ashift*x);
         vec = [x1; x2];
@@ -83,16 +95,14 @@ switch method
     case 'FullLS'
 
         %% Form Matrices
-        Ifull = eye(differential + algebraic);
-        order = [win, rangerest];
-        P = Ifull(order,:);
-        Ashift = Ashift*ctranspose(P);
         H = zeros(length(win), differential + algebraic);
-        H(1:length(win), 1:length(win)) = eye(length(win));
-
+        for i = 1:length(win)
+            H(i, win(i)) = 1;
+        end
+        alpha = 1.5; 
         % Solve Mx=b
-        M = [H; Ashift ];
-        b = [x1; zeros(differential + algebraic, 1)];
+        M = [alpha*H; Ashift ];
+        b = [alpha*x1; zeros(differential + algebraic, 1)];
 
         vec = M\b;
         residual = norm(M*vec - b);
