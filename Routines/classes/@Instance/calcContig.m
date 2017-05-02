@@ -22,7 +22,7 @@ minfreq = obj.minfreq;
 if(report)
     noiseparam = 0;
     ampparam = 0.0;
-    %[empvecsClean, empvalsClean, ~]  = runN4SID(obj.dynamic_data, modelorder, noiseparam);\
+    %[empvecsClean, empvalsClean, ~]  = runN4SID(obj.PMU_data, modelorder, noiseparam);
     fname = sprintf('n4sidDataNoise0Contig%d.mat',obj.correctContig);
     load(fname);
     mode = 'freq';
@@ -37,7 +37,16 @@ try
     fname = sprintf('n4sidDataNoise%dContig%d.mat',noise*100,  obj.correctContig);
     load(fname);
 catch
-    error('The Amount of Error Added is not supported when loading N4SID Data');
+    noiseparam = 0;
+    ampparam = 0.0;
+    disp('The Amount of Error Added is not supported when loading N4SID Data... running N4SID in real time');
+    [empvecs, empvals, ~]  = runN4SID(obj.PMU_data, modelorder, noiseparam);
+    mode = 'freq';
+    [empvecs, empvals] = filter_eigpairs(minfreq, maxfreq, empvals, empvecs, mode);
+    mode = 'amp';
+    [empvecs, empvals] = filter_eigpairs(ampparam, [], empvals, empvecs, mode);
+    mode = 'damp';
+    [empvecs, empvals] = filter_eigpairs(0, 20, empvals, empvecs, mode);
 end 
 
 % Smooth Data

@@ -15,10 +15,12 @@ for i = 1:numcontigs
     lname = sprintf('simfull-contig%d.mat', i);
     load(lname);
     n = differential + 1; 
-    data = Varout.vars(:, n:n+2*numbuses - 1); 
-    data = data(offsetsteps:skip:end, :);
+    data = Varout.vars(offsetsteps:skip:end, n:n+2*numbuses - 1); 
+    statedata = Varout.vars(offsetsteps:skip:end, :);
     sname = sprintf('busdata%d.mat', i);
+    ssname = sprintf('statedata%d.mat',i);
     save(sname, 'data', 'timestep');
+    save(ssname, 'statedata', 'timestep');
     A = [DAE.Fx DAE.Fy; DAE.Gx DAE.Gy];
     mname = sprintf('matrixdata%d.mat', i);
     save(mname, 'A');
