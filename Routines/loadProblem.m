@@ -1,54 +1,54 @@
-function testInstance = loadProblem(casename, contignum, fitting_method, analysis_method, evaluation_method, PMU)
+function Inst = loadProblem(casename, contignum, fitting_method, analysis_method, evaluation_method, PMU)
 
-testInstance = Instance;
+Inst = Instance;
 
-% Initialize testInstance.metadata
+% Initialize Inst.metadata
 load(sprintf('metadata.mat', casename));
-testInstance.metadata.numcontigs = numcontigs;
-testInstance.metadata.numbuses = numbuses;
-testInstance.metadata.filename = casename;
-testInstance.metadata.timestep = timestep;
-testInstance.metadata.numlines = numlines;
-testInstance.metadata.differential = differential;
-testInstance.metadata.algebraic = algebraic;
+Inst.metadata.numcontigs = numcontigs;
+Inst.metadata.numbuses = numbuses;
+Inst.metadata.filename = casename;
+Inst.metadata.timestep = timestep;
+Inst.metadata.numlines = numlines;
+Inst.metadata.differential = differential;
+Inst.metadata.algebraic = algebraic;
 
-% Initialize testInstance.dynamic_data
+% Initialize Inst.dynamic_data
 filename = sprintf('busdata%d.mat',contignum);
 load(filename);
 front_offset = 50;
 back_offset = 100;
-data = data(front_offset:(end - back_offset), PMU - differential);
 %data = data + .00001*abs(data).*randn(size(data));
 
 % Initialize rest
-testInstance.casename = casename;
-testInstance.correctContig = contignum;
-testInstance.dynamic_data = data;
-testInstance.fitting_method = fitting_method;
-testInstance.analysis_method = analysis_method;
-testInstance.evaluation_method = evaluation_method; 
-testInstance.PMU = PMU;
-testInstance.minfreq = 0.5;
-testInstance.maxfreq = 30; %10 because we assume PMU sampling at 30hz and by Shannon Nyquist we should only be able to fit 15hz
+Inst.casename = casename;
+Inst.correctContig = contignum;
+Inst.PMU_data = data(front_offset:(end - back_offset), PMU - differential);
+Inst.Full_data = data(front_offset:(end - back_offset), :);
+Inst.fitting_method = fitting_method;
+Inst.analysis_method = analysis_method;
+Inst.evaluation_method = evaluation_method; 
+Inst.PMU = PMU;
+Inst.minfreq = 0.5;
+Inst.maxfreq = 30; %10 because we assume PMU sampling at 30hz and by Shannon Nyquist we should only be able to fit 15hz
 
-% Initialize testInstance.testbank
-if(isempty(testInstance.metadata))
+% Initialize Inst.testbank
+if(isempty(Inst.metadata))
     error('Metadata field is empty. Please build problem instance first');
 else
-    if(isempty(testInstance.metadata.numcontigs))
+    if(isempty(Inst.metadata.numcontigs))
         error('Metadata field is not initialized');
     end
 end
-differential = testInstance.metadata.differential;
-algebraic = testInstance.metadata.algebraic;
-testInstance.testbank = {};
-n = testInstance.metadata.numcontigs;
+differential = Inst.metadata.differential;
+algebraic = Inst.metadata.algebraic;
+Inst.testbank = {};
+n = Inst.metadata.numcontigs;
 for contignum = 1:n
     I = eye(differential);
     E = zeros(algebraic + differential);
     E(1:differential,1:differential) = I;
     load(sprintf('matrixdata%d.mat', contignum));
-    testInstance.testbank{contignum} = {A,E};
+    Inst.testbank{contignum} = {A,E};
 end
 
 end

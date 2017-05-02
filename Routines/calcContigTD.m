@@ -14,24 +14,28 @@ function [scores, eigenfits] = calcContigTD(obj, noise, modelorder, numevals)
 
 load metadata.mat
 PMU = obj.PMU;
-data = obj.dynamic_data;
-tstep = 0.05;
-
+PMUdata = obj.PMU_data;
+tstep = timestep;
+alpha = 1;
 
 % Truncate Dynamic Data and form RHS of LS Problem
-len = 400;
-data = data(1:len, :);
+len = 100;
+data = PMUdata(1:len, :);
 b1 = zeros((differential + algebraic)*len , 1);
-b2 = reshape(data', [len*length(PMU), 1]);
+b2 = alpha*reshape(data', [len*length(PMU), 1]);
 b = [b1; b2];
 b = sparse(b);
+
+% As a sanity check, load full state (FS) as well. 
+FS = obj.Full_data(1:len, :);
+
 
 % Form Sensing Matrix A
 H = zeros(length(PMU), differential + algebraic);
 for i = 1:length(PMU)
     H(i, PMU(i)) = 1;
 end
-H = sparse(H);
+H = sparse(alpha*H);
 
 % Form Matrices Necessary for Kronecker Product
 L = diag(ones(len-1,1),1);
@@ -50,15 +54,13 @@ for k = 1:numcontigs
     % Form LS Matrix
     M1 = kron(Iboundary, Ad) - kron(L, E);
     M2 = kron(speye(len), H);
+
     M = [M1; M2];
-    spy(M);
     x = M\b;
     tsteps = size(data,1);
-    X = reshape(x, [differential + algebraic, tsteps]);
-    X = X';
-    Y = X(:, PMU);
-
-    scores(k) = norm(Y - data);
+    
+    plotFirst(x, data, PMU, differential + algebraic);
+    scores(k) = norm(M*x - b);
     eigenfits(k) = 0;
     
 end

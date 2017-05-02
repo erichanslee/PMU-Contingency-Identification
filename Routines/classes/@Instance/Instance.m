@@ -29,7 +29,8 @@ classdef Instance
         analysis_method
         evaluation_method 
         numevals
-        dynamic_data
+        PMU_data
+        Full_data
         testbank
         PMU
         minfreq

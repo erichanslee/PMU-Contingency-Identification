@@ -22,7 +22,7 @@ PMUidx = place_PMU(contignum, PMU);
 
 % Run Test Instance
 test = loadProblem('39bus', contignum, 'Weighted', 'Weighted', method, PMUidx);
-[scores, eigenfits] = calcContig(test, noise, modelorder, numevals);
+[scores, eigenfits] = calcContigTD(test, noise, modelorder, numevals);
 [~, ranking]  = sort(scores);
 res = [];
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
