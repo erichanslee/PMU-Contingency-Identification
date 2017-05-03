@@ -51,9 +51,9 @@ for k = 1:numcontigs
     Mk = [M1; M2];
 
     % Solve LS problem and return residual
-    %x = Mk\b;
-    scores(k) = norm(Mk*fs - b);
-    plotFirst(fs, PMUdata(1:len,:), PMU, differential + algebraic);
+    x = Mk\b;
+    scores(k) = norm(Mk*x - b)/norm(b);
+    %lotFirst(fs, PMUdata(1:len,:), PMU, differential + algebraic);
     eigenfits(k) = 0;
 end
 
