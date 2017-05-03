@@ -10,7 +10,7 @@
 % scores = scores with filtering
 % num_eigenfits = number of eigenvectors fitted before scoring.
 
-function [scores, num_eigenfits] = calcContig(obj, noise, modelorder)
+function [scores, num_eigenfits] = calcContigFD(obj, noise, modelorder)
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~ Preprocessing ~~~~~~~~~~~~~~~~% 

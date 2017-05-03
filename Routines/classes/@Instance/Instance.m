@@ -19,7 +19,5 @@ classdef Instance
         maxfreq
         correctContig
     end
-    
-
 
 end

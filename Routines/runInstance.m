@@ -19,7 +19,14 @@ win = place_PMU(contignum, PMU);
 
 % Run Test Instance
 test = loadInstance(contignum, win);
-[scores, num_eigenfits] = calcContig(test, noise, modelorder);
+switch method
+	case 'FrequencyDomain'
+		[scores, num_eigenfits] = calcContigFD(test, noise, modelorder);
+	
+	case 'TimeDomain'
+		[scores, num_eigenfits] = calcContigTD(test, noise, modelorder);
+		
+end
 [~, ranking]  = sort(scores);
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
 

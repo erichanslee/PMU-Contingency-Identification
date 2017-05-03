@@ -10,7 +10,7 @@
 % scores = scores with filtering
 % eigenfits = number of eigenvectors fitted before scoring.
 
-function [scores, eigenfits] = calcContigTD(obj, noise, modelorder, numevals)
+function [scores, eigenfits] = calcContigTD(obj, noise, modelorder)
 
 % Misc. Parameters Initialized
 load metadata.mat
@@ -53,7 +53,6 @@ for k = 1:numcontigs
     % Solve LS problem and return residual
     x = Mk\b;
     scores(k) = norm(Mk*x - b)/norm(b);
-    %lotFirst(fs, PMUdata(1:len,:), PMU, differential + algebraic);
     eigenfits(k) = 0;
 end
 

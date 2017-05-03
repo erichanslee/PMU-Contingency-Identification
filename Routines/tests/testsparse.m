@@ -7,7 +7,7 @@
 % numthreads = tell to run serially or in parallel
 %
 % ~~~OUTPUT~~~ %
-% result(n) = number of correct identifications within the n-th ranking
+% result<n> = number of correct identifications within the n-th ranking
 % scores = matrix of scores; score(i,j) represents the score of contingency i fitted against the jacobian of contingency j.
 % misdiagnoses = k x 3 matrix of misdiagnoses [incorrect x correct x ranking]
 %
@@ -18,7 +18,7 @@ function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, nois
 % Load metadata, initialize results vectors
 load metadata.mat
 
-evalmethod = 'stable';
+evalmethod = 'FrequencyDomain';
 results = zeros(1, numcontigs);
 results3 = zeros(1, numcontigs);
 results5 = zeros(1, numcontigs);
