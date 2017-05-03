@@ -1,4 +1,14 @@
-function Inst = loadProblem(contignum, PMU)
+%	function Inst = loadProblem(contignum, win)
+%
+% ~~~~~~~~~INPUTS~~~~~~~~~ %
+% contignum = contingency number
+% win = Indices of buses wins can see 
+%
+% ~~~~~~~~~OUTPUTS~~~~~~~~~ %
+%
+% Inst = problem instance 
+
+function Inst = loadInstance(contignum, win)
 
 Inst = Instance;
 load metadata.mat
@@ -11,10 +21,10 @@ back_offset = 100;
 
 % Initialize rest
 Inst.correctContig = contignum;
-Inst.PMU_data = data(front_offset:(end - back_offset), PMU - differential);
-Inst.PMU = PMU;
+Inst.PMU_data = data(front_offset:(end - back_offset), win - differential);
+Inst.win = win;
 Inst.minfreq = 0.5;
-Inst.maxfreq = 30; %10 because we assume PMU sampling at 30hz and by Shannon Nyquist we should only be able to fit 15hz
+Inst.maxfreq = 30; %10 because we assume win sampling at 30hz and by Shannon Nyquist we should only be able to fit 15hz
 
 
 % testbank a set of models to fit over

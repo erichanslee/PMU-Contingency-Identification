@@ -8,36 +8,31 @@
 
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 % scores = scores with filtering
-% eigenfits = number of eigenvectors fitted before scoring.
+% num_eigenfits = number of eigenvectors fitted before scoring.
 
-function [scores, eigenfits] = calcContig(obj, noise, modelorder)
+function [scores, num_eigenfits] = calcContig(obj, noise, modelorder)
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~ Preprocessing ~~~~~~~~~~~~~~~~% 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 
 load metadata.mat
-PMU = obj.PMU;
+win = obj.win;
 maxfreq = obj.maxfreq;
 minfreq = obj.minfreq;
+ampparam = 0.0;
 
 try
     % Preload N4SID Data If Needed
-    ampparam = 0.0;
-    fname = sprintf('n4sidDataNoise%dContig%d.mat',noise*100,  obj.correctContig);
+    fname = sprintf('n4sidDataNoise%dContig%d.mat',noise*100,  obj.correctContig); 
     load(fname);
     [empvecs, empvals] = filter_eigpairs_all(empvecs, empvals, minfreq, maxfreq, ampparam);
 catch
-    ampparam = 0.0;
     disp('The Amount of Error Added is not supported when fetching N4SID Data... running N4SID in real time');
     [empvecs, empvals, ~]  = runN4SID(obj.PMU_data, modelorder);
     [empvecs, empvals] = filter_eigpairs_all(empvecs, empvals, minfreq, maxfreq, ampparam)
 
 end 
-
-% Smooth Data
-%obj.dynamic_data = smoothData(obj.dynamci_data, 2, 1/30, 'gaussfilter');
-
 
 % Fill weightsScore with amplitudes
 weightsScore = zeros(length(empvals), 1);
@@ -54,7 +49,7 @@ empvals = empvals(idx);
 empvecs = normalizematrix(empvecs);
 
 %allocate outputs
-eigenfits = zeros(1, numcontigs);
+num_eigenfits = zeros(1, numcontigs);
 scores = zeros(1, numcontigs);
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
@@ -62,15 +57,14 @@ scores = zeros(1, numcontigs);
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 
 for k = 1:numcontigs
-    contig = k;
-    [A,E] = obj.retrieveModel(contig);
+    [A,E] = obj.retrieveModel(k);
 
     % Run fitting via assessContig
-    [residuals, ~] = assessContig(A, E, empvals, empvecs, PMU, numevals);
+    [residuals, ~] = assessContig(A, E, empvals, empvecs, win, numevals);
     
     % Calculate Score via Weighted Sum
-    scores(contig) = calcScore(residuals, weightsScore);
-    eigenfits(contig) = numevals;
+    scores(k) = calcScore(residuals, weightsScore);
+    num_eigenfits(k) = numevals;
 end
 
 end
