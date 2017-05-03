@@ -19,7 +19,6 @@ function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, nois
 load metadata.mat
 
 evalmethod = 'stable';
-numevals = 0;
 results = zeros(1, numcontigs);
 results3 = zeros(1, numcontigs);
 results5 = zeros(1, numcontigs);
@@ -31,7 +30,7 @@ misdiagnoses = zeros(numcontigs, 3);
 if(numthreads == 1)
         for j = 1:numcontigs
             contig = j;
-            [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder, numevals);
+            [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder);
             
             if(contig ==  ranking(1))
                 result = result + 1;
@@ -57,7 +56,7 @@ else
         parpool(numthreads);
         parfor j = 1:numcontigs
             contig = j;
-            [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder, numevals);
+            [scores(:, j), ranking, ~, ~] = testinstance(evalmethod, contig, PMU, noise, modelorder);
             
             if(contig ==  ranking(1))
                 results(j) = 1;

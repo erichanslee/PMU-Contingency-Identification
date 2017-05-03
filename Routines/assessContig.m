@@ -7,14 +7,13 @@
 % empvals = empirical eigenvalues
 % empvecs = empirical eigenvectors
 % win = indices in which voltages can be read/inferred
-% weights = weights corresponding to PMU data to put in weighted least squares
 % ~~~~~~~~~~~~~~~~~~~~~~~~~
 % ~~~~~~~~~OUTPUTS~~~~~~~~~
 % ~~~~~~~~~~~~~~~~~~~~~~~~~
 % fittedVecs = fitted eigenvectors
 % fittedRes = residuals from fittedVecs
 
-function [fittedRes, fittedVec] = assessContigStable(A, E, method, empvals, empvecs, win, numevals, weights)
+function [fittedRes, fittedVec] = assessContig(A, E, empvals, empvecs, win, numevals)
 load metadata.mat
 
 
@@ -30,7 +29,7 @@ load metadata.mat
 % Solve
 for j = 1:numevals
     lambda = empvals(j);
-    lambdah =    exp(lambda*.05);
+    lambdah = exp(lambda*.05);
     Ashift = A - lambda*E;
     x1 = empvecs(:,j);
     rangerest = 1:(differential + algebraic);
