@@ -13,7 +13,7 @@
 % eigenfits = number of fitted vectors 
 % res = not explicitly output in this case, but residuals after fitting vecs
 
-function [scores, ranking, eigenfits, res] = testinstance(method, contignum, PMU, noise, modelorder)
+function [scores, ranking, eigenfits, res] = runInstance(method, contignum, PMU, noise, modelorder)
 
 % Get PMU Matrix Indices from PMU System Indices
 win = place_PMU(contignum, PMU);
