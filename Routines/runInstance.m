@@ -1,4 +1,4 @@
-% function [scores, ranking, eigenfits, res] = testinstance(method, contignum, PMU, noise, modelorder, numevals)
+% function [scores, ranking, num_eigenfits] = runInstance(method, contignum, PMU, noise, modelorder)
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % method = whether to filter or not. 
 % contignum = contingency number

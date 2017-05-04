@@ -18,7 +18,7 @@ function [result, result3, result5, scores, misdiagnoses] = testsparse(PMU, nois
 % Load metadata, initialize results vectors
 load metadata.mat
 
-evalmethod = 'FrequencyDomain';
+evalmethod = 'TimeDomain';
 results = zeros(1, numcontigs);
 results3 = zeros(1, numcontigs);
 results5 = zeros(1, numcontigs);

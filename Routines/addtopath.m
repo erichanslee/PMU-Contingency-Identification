@@ -8,4 +8,5 @@ function addtopath()
 	addpath('Contigs/57bus/');
 	addpath('tests/');
 	addpath(genpath('reporting/'));
+    addpath(pwd);
 end
