@@ -1,4 +1,3 @@
-% Contingency 1
 
 load metadata.mat
 
@@ -27,8 +26,9 @@ for i = 1:numcontigs
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
     % ~~~~~ Process Data ~~~~~~~ %
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-    data = X(1:iteratestep:end, :);
+    n = differential + 1;
+    data = X(1:iteratestep:end, n:n+2*numbuses - 1);
     fname = sprintf('LinearData%d.mat',i);
-    save(fname);
+    save(fname, 'data');
     
 end

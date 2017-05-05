@@ -15,10 +15,10 @@ function [scores, eigenfits] = calcContigTD(obj, noise, modelorder)
 % Misc. Parameters Initialized
 load metadata.mat
 PMU = obj.win;
-PMU = sort(PMU, 'ascend');
+    PMU = sort(PMU, 'ascend');
 PMUdata = obj.PMU_data;
 alpha = 1;
-len = 400;
+len = 100;
 
 % Form Matrices for Kronecker Products
 H = zeros(length(PMU), differential + algebraic);
@@ -31,9 +31,9 @@ I = speye(len);
 I(end, end) = 0;
 b1 = MatToVec(PMUdata(1:len, :));
 
-for k = 1:numcontigs
-    [A,E] = obj.retrieveModel(k);
-
+for i = 1:numcontigs
+    [A,E] = obj.retrieveModel(i);
+    
     % Form Discrete Algebraic Equations
     Ad = GetDiscrete(A, differential, algebraic, timestep);
     Ad = sparse(Ad);
@@ -43,12 +43,15 @@ for k = 1:numcontigs
     b2 = zeros(size(M2, 1), 1);
     b = sparse([alpha*b1; b2]);
     Mk = [M1; M2];
+    x = Mk\b;
+    
+    %plotFirst(x, PMUdata(1:len, :), PMU, differential + algebraic);
     
     % Solve LS problem and return residual
-    x = Mk\b;
-    scores(k) = norm(Mk*x - b)/norm(b);
-    eigenfits(k) = 0;
+    scores(i) = norm(Mk*x - b)/norm(b);
+    eigenfits(i) = 0;
 end
+
 
 end
 
@@ -81,7 +84,7 @@ end
 function plotFirst(x, data, PMU, ssize)
 
 timesteps = size(data,1);
-plot(1:timesteps, data(:,5) + 1, 1:timesteps, x(PMU(5):ssize:end));
+plot(1:timesteps, data(:,1), 1:timesteps, x(PMU(1):ssize:end));
 legend('True', 'Fitted');
 
 end

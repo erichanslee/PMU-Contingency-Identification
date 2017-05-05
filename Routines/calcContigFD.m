@@ -30,7 +30,7 @@ try
 catch
     disp('The Amount of Error Added is not supported when fetching N4SID Data... running N4SID in real time');
     [empvecs, empvals, ~]  = runN4SID(obj.PMU_data, modelorder);
-    [empvecs, empvals] = filter_eigpairs_all(empvecs, empvals, minfreq, maxfreq, ampparam)
+    [empvecs, empvals] = filter_eigpairs_all(empvecs, empvals, minfreq, maxfreq, ampparam);
 
 end 
 
