@@ -24,7 +24,8 @@ classdef fd_LS_Analysis < Analysis
 		end
 
 		function [scores, ranking] = calcContig(obj, objInstance)
-			[scores, ranking] = calcContigInner(obj, objInstance);
+			[scores, ~] = calcContigInner(obj, objInstance);
+			[~, ranking] = sort(scores);
 		end
 
 	end
@@ -45,7 +46,7 @@ function [scores, num_eigenfits] = calcContigInner(obj, objInstance)
 
 	try
 	    % Preload N4SID Data If Needed
-	    fname = sprintf('n4sidDataNoise%dContig%d.mat',noise*100,  obj.correctContig); 
+	    fname = sprintf('n4sidDataNoise%dContig%d.mat',obj.noise*100,  objInstance.correctContig); 
 	    load(fname);
 	    [empvecs, empvals] = filter_eigpairs_all(empvecs, empvals, minfreq, maxfreq, ampparam);
 	catch

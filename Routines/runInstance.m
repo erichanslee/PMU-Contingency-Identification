@@ -16,8 +16,14 @@ function [scores, ranking] = runInstance(method, contignum, PMU, noise, modelord
 
 % Get PMU Matrix Indices from PMU System Indices
 win = place_PMU(contignum, PMU);
+
+% Inst of class Instance containing problem data (PMU, dynamics, etc)
 Inst = loadInstance(contignum, win);
+
+% Ana of class Analysis used to calculate contingency
 Ana = fd_LS_Analysis(modelorder, noise);
+
+% Run Contingency Identification 
 [scores, ranking] = Ana.calcContig(Inst);
 
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
