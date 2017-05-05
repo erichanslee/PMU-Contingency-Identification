@@ -30,7 +30,7 @@ misdiagnoses = zeros(numcontigs, 3);
 if(numthreads == 1)
         for j = 1:numcontigs
             contig = j;
-            [scores(:, j), ranking, ~] = runInstance(evalmethod, contig, PMU, noise, modelorder);
+            [scores(:, j), ranking] = runInstance(evalmethod, contig, PMU, noise, modelorder);
             
             if(contig ==  ranking(1))
                 result = result + 1;
@@ -56,7 +56,7 @@ else
         parpool(numthreads);
         parfor j = 1:numcontigs
             contig = j;
-            [scores(:, j), ranking, ~] = runInstance(evalmethod, contig, PMU, noise, modelorder);
+            [scores(:, j), ranking] = runInstance(evalmethod, contig, PMU, noise, modelorder);
             
             if(contig ==  ranking(1))
                 results(j) = 1;

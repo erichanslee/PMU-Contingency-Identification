@@ -12,22 +12,14 @@
 % ranking = ranking of contingencies in terms of likehood
 % eigenfits = number of fitted vectors 
 
-function [scores, ranking, num_eigenfits] = runInstance(method, contignum, PMU, noise, modelorder)
+function [scores, ranking] = runInstance(method, contignum, PMU, noise, modelorder)
 
 % Get PMU Matrix Indices from PMU System Indices
 win = place_PMU(contignum, PMU);
+Inst = loadInstance(contignum, win);
+Ana = fd_LS_Analysis(modelorder, noise);
+[scores, ranking] = Ana.calcContig(Inst);
 
-% Run Test Instance
-test = loadInstance(contignum, win);
-switch method
-	case 'FrequencyDomain'
-		[scores, num_eigenfits] = calcContigFD(test, noise, modelorder);
-	
-	case 'TimeDomain'
-		[scores, num_eigenfits] = calcContigTD(test, noise, modelorder);
-		
-end
-[~, ranking]  = sort(scores);
 fprintf('Contingency Identified: Contig %d\n', ranking(1));
 
 
