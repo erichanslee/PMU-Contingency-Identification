@@ -21,7 +21,7 @@ win = place_PMU(contignum, PMU);
 Inst = loadInstance(contignum, win);
 
 % Ana of class Analysis used to calculate contingency
-Ana = fd_LS_Analysis(modelorder, noise);
+Ana = td_kroneckerLS_Analysis(noise);
 
 % Run Contingency Identification 
 [scores, ranking] = Ana.calcContig(Inst);
