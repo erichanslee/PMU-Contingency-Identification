@@ -1,4 +1,5 @@
-% td_kroneckerLS_Analysis stands for frequency domain least squares analysis. 
+% Time Domain Kronecker Least Squares Analysis. Minimizes (A \kron I - H \kron L)*X = [0; Y]
+%
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~ Class Properties~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %

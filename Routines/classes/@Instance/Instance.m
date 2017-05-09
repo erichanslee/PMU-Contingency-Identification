@@ -1,5 +1,4 @@
 % Class Instance
-
 % ~~~PROPERTIES~~~%
 %
 % correctContig = index of correct contingency
