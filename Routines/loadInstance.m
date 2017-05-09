@@ -2,19 +2,21 @@
 %
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % contignum = contingency number
-% win = Indices of buses wins can see 
+% win = Indices of buses PMUs can see (indices relative to SYSTEM MODEL)
+% datatype = 'linear' or 'nonlinear'
 %
 % ~~~~~~~~~OUTPUTS~~~~~~~~~ %
 %
 % Inst = problem instance 
 
-function Inst = loadInstance(contignum, win)
+function Inst = loadInstance(datatype, contignum, win)
 
 Inst = Instance;
 load metadata.mat
 
 % Initialize Inst.dynamic_data
-filename = sprintf('LinearData%d.mat',contignum);
+filename = sprintf(strcat(datatype,'busdata%d.mat'),contignum);
+
 load(filename);
 front_offset = 50;
 back_offset = 100;

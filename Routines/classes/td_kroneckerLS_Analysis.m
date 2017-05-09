@@ -73,6 +73,10 @@ function [scores, num_eigenfits] = calcContigInner(obj, objInstance)
 	end
 end
 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~ Helper Functions ~~~~~~~~~~~~~ % 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
 % Forms Discrete Matrix Ad from the DAE Ex' = Ax
 function Ad = GetDiscrete(A, n, m, timestep)
 A11 = A(1:n, 1:n);

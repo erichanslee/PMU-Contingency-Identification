@@ -28,7 +28,7 @@ for i = 1:numcontigs
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
     n = differential + 1;
     data = X(1:iteratestep:end, n:n+2*numbuses - 1);
-    fname = sprintf('LinearData%d.mat',i);
+    fname = sprintf('linearbusdata%d.mat',i);
     save(fname, 'data');
     
 end

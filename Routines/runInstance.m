@@ -2,7 +2,7 @@
 % ~~~~~~~~~INPUTS~~~~~~~~~ %
 % method = whether to filter or not. 
 % contignum = contingency number
-% PMU = Indices of buses PMUs can see 
+% PMU = Indices of PMU Locations (indices relative to BUS NUMBERS)
 % noise = percentage of noise to add to dynamic data
 % modelorder = order of model to fit to n4sid
 %
@@ -18,10 +18,11 @@ function [scores, ranking] = runInstance(method, contignum, PMU, noise, modelord
 win = place_PMU(contignum, PMU);
 
 % Inst of class Instance containing problem data (PMU, dynamics, etc)
-Inst = loadInstance(contignum, win);
+Inst = loadInstance('nonlinear', contignum, win);
 
 % Ana of class Analysis used to calculate contingency
-Ana = td_kroneckerLS_Analysis(noise);
+%Ana = td_vandermondeLS_Analysis(noise);
+Ana = fd_LS_Analysis(modelorder, noise);
 
 % Run Contingency Identification 
 [scores, ranking] = Ana.calcContig(Inst);
