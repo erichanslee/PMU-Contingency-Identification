@@ -22,5 +22,10 @@ MATLAB R2016+
 ## Report
 * Misc Reports 
 
+# TO GENERATE AND USE DATA:
+* Go to Workspace/57bus/
+* Run runall.sh, a shell script generating time domain data of nonlinear and linear models, jacobians, etc. 
+* Move matrixdata*, nonlinearbusdata*, linearbusdata* files to Routines/data/57bus/ in order to use for contingency identification
+* Run scripts in Routines/doc/SampleScripts.m (don't run the entire thing it has a number of different scripts)
 
 
