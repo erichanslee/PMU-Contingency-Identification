@@ -7,75 +7,85 @@
 
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-% ~~~~~~~~~~~~~~~~~ CLASSDEF ~~~~~~~~~~~~~~~~~~~ % 
+% ~~~~~~~~~~~~~~~~~ CLASSDEF ~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 
 classdef td_kroneckerLS_Analysis < Analysis
-	properties (Access = public)
-		name = 'fd_LS_Analysis';
-		noise
-	end
-
-	methods (Access = public)
-		function obj = td_kroneckerLS_Analysis(noise)
-			obj.noise = noise;
-		end
-
-		function [scores, ranking] = calcContig(obj, objInstance)
-			[scores, ~] = calcContigInner(obj, objInstance);
-			[~, ranking] = sort(scores);
-		end
-
-	end
+    properties (Access = public)
+        name = 'td_kroneckerLS_Analysis';
+        noise
+    end
+    
+    methods (Access = public)
+        function obj = td_kroneckerLS_Analysis(noise)
+            obj.noise = noise;
+        end
+        
+        function [scores, ranking] = calcContig(obj, objInstance)
+            [scores, ~] = calcContigInner(obj, objInstance);
+            [~, ranking] = sort(scores);
+        end
+        
+    end
 end
 
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-% ~~~~~~~~~~~~~~~ calcContig Def ~~~~~~~~~~~~~~~ % 
+% ~~~~~~~~~~~~~~~ calcContig Def ~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 
 function [scores, num_eigenfits] = calcContigInner(obj, objInstance)
-	% Misc. Parameters Initialized
-	load metadata.mat
-	PMU = objInstance.win;
-	    PMU = sort(PMU, 'ascend');
-	PMUdata = objInstance.PMU_data;
-	alpha = 1;
-	len = 100;
+% Misc. Parameters Initialized
+load metadata.mat
+PMU = objInstance.win;
+PMU = sort(PMU, 'ascend');
+PMUdata = objInstance.PMU_data;
+alpha = 1;
+len = 100;
 
-	% Form Matrices for Kronecker Products
-	H = zeros(length(PMU), differential + algebraic);
-	for i = 1:length(PMU)
-	    H(i, PMU(i)) = 1;
-	end
-	L = diag(ones(len-1,1), 1);
-	L = sparse(L);
-	I = speye(len);
-	I(end, end) = 0;
-	b1 = MatToVec(PMUdata(1:len, :));
+% Form Matrices for Kronecker Products
+H = zeros(length(PMU), differential + algebraic);
+for i = 1:length(PMU)
+    H(i, PMU(i)) = 1;
+end
+L = diag(ones(len-1,1), 1);
+L = sparse(L);
+I = speye(len);
+I(end, end) = 0;
+b1 = MatToVec(PMUdata(1:len, :));
 
-	for i = 1:numcontigs
-	    [A,E] = objInstance.retrieveModel(i);
-	    
-	    % Form Discrete Algebraic Equations
-	    Ad = GetDiscrete(A, differential, algebraic, timestep);
-	    Ad = sparse(Ad);
-	    E = sparse(E);
-	    M1 = kron(speye(len), alpha*H);
-	    M2 = kron(I, Ad) - kron(L, E);
-	    b2 = zeros(size(M2, 1), 1);
-	    b = sparse([alpha*b1; b2]);
-	    Mk = [M1; M2];
-	    x = Mk\b;
-	    
-	    % Solve LS problem and return residual
-	    scores(i) = norm(Mk*x - b)/norm(b);
-	    num_eigenfits(i) = 0;
-	end
+% Weighing Matrix for Weighted Least Squares
+d = kron(sqrt(1:len)', ones(length(PMU), 1));
+d = [d; ones(len*(differential + algebraic), 1)];
+D = diag(d);
+D = sparse(D);
+
+for i = 1:numcontigs
+    [A,E] = objInstance.retrieveModel(i);
+    
+    % Form Discrete Algebraic Equations
+    Ad = GetDiscrete(A, differential, algebraic, timestep);
+    Ad = sparse(Ad);
+    E = sparse(E);
+    M1 = kron(speye(len), alpha*H);
+    M2 = kron(I, Ad) - kron(L, E);
+    b2 = zeros(size(M2, 1), 1);
+    b = sparse([alpha*b1; b2]);
+    Mk = [M1; M2];
+    
+    
+    
+    % Solve LS problem and return residual
+    DMk = D*Mk;
+    Db = D*b;
+    x = (DMk)\(Db);
+    scores(i) = norm(DMk*x - Db)/norm(Db);
+    num_eigenfits(i) = 0;
+end
 end
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-% ~~~~~~~~~~~~~~~ Helper Functions ~~~~~~~~~~~~~ % 
+% ~~~~~~~~~~~~~~~ Helper Functions ~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 
 % Forms Discrete Matrix Ad from the DAE Ex' = Ax

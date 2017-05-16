@@ -5,7 +5,7 @@ function addtopath()
 
 	addpath(genpath('classes/'));
 	addpath('data/57bus/');
-	addpath('Contigs/57bus/');
+	addpath('contigs/57bus/');
 	addpath('tests/');
 	addpath(genpath('reporting/'));
     addpath(pwd);

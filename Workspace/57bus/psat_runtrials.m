@@ -5,4 +5,4 @@ tstep = 1/300;
         matfname = sprintf('simfull-contig%d', k);
         psat_runtrial(psatname, matfname, tstep);
     end
-end
+
