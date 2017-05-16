@@ -12,7 +12,7 @@ PMU = [6 16 26];
 noise = 0.05;
 modelorder = 40; 
 method = 'frequencydomain';
-dataype = 'nonlinear';
+datatype = 'nonlinear';
 [scores, ranking] = runInstance(method, datatype, contignum, PMU, noise, modelorder); 
 
 
@@ -28,7 +28,7 @@ PMU = [6 16 26];
 noise = 0.05;
 modelorder = []; 
 method = 'timedomain';
-dataype = 'nonlinear';
+datatype = 'nonlinear';
 [scores, ranking] = runInstance(method, datatype, contignum, PMU, noise, modelorder); 
 
 
@@ -44,7 +44,7 @@ PMU = [6 16 26];
 noise = 0.05;
 modelorder = []; 
 method = 'timedomain';
-dataype = 'linear';
+datatype = 'linear';
 [scores, ranking] = runInstance(method, datatype, contignum, PMU, noise, modelorder); 
 
 
