@@ -18,7 +18,7 @@ function [scores, ranking] = runInstance(method, datatype, contignum, PMU, noise
 win = place_PMU(contignum, PMU);
 
 % Inst of class Instance containing problem data (PMU, dynamics, etc)
-Inst = loadInstance('nonlinear', contignum, win);
+Inst = loadInstance(datatype, contignum, win);
 
 
 % Ana of class Analysis used to calculate contingency
@@ -28,6 +28,9 @@ switch method
 	case 'timedomain'
 		Ana = td_kroneckerLS_Analysis(noise);
 		%Ana = td_vandermondeLS_Analysis(noise);
+	otherwise
+		error('Not Valid Analysis Method');
+
 end
 
 % Run Contingency Identification 

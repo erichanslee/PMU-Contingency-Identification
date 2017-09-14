@@ -11,11 +11,14 @@ for i = 1:numcontigs
     
     fname = sprintf('matrixdata%d.mat',i);
     load(fname);
-    
+    fname = sprintf('simfull-contig%d.mat',i);
+    load(fname);
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
     % ~~~~~~ Run ode23t ~~~~~~~~ %
     % ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-    x0 = ones(differential + algebraic, 1);
+    x0 = Varout.vars(1,:);
+
+
     f = @(t,x) A*x;
     tstep = 1/30;
     iteratestep = 10;

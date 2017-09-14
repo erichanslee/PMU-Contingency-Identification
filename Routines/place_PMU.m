@@ -16,7 +16,7 @@ load metadata.mat
 
 rangebusVoltage = (differential + numbuses + 1):(differential + numbuses + numbuses);
 rangebusAngle = (differential + 1):(differential + numbuses);
-run(sprintf('contig%d.m',contignum));
+run(sprintf('bus57.m',contignum));
 Lines = Line.con(:,1:2);
 Lines(contignum,:) = [];
 

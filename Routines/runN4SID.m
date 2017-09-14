@@ -27,6 +27,7 @@ opt = n4sidOptions('N4Weight', 'auto', 'Focus', 'simulation');
 % Calculate Eigenvalue and Eigenvector Predictions from N4SID
 [ mx, md] = eig(m.A);
 empvals = (log(md)/timestep);
+% empvals = md;
 empvecs = m.C*mx;
 
 % Reconstruct data to get error

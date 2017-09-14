@@ -1,4 +1,4 @@
-% psat_runtrial(basename, matfname)
+% psat_runtrial(basename, matfname, timestep)
 %
 % Run a time domain simulation.
 %

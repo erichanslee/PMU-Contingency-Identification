@@ -1,8 +1,8 @@
 % Takes eigenpairs given in the form (vals, vecs) and returns only
 % those pairs with frequency between minfreq and maxfreq, sorted
-
+%
 % Note that vals should be an 1D array and not a sparse/dense matrix
-
+% TODO: Filter by lowest percentage of stuff (makes most sense for amplitude)
 function [vi, di] = filter_eigpairs(minbound, maxbound, vals, vecs, mode)
 
 % if vals is matrix instead of matrix then consider take diag of it

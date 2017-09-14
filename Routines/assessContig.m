@@ -26,7 +26,6 @@ load metadata.mat
 %Ash = expm(As*0.05);
 %Ah = [Ash, zeros(size(A12)); A21, A22];
 
-% Solve
 for j = 1:numevals
     lambda = empvals(j);
     lambdah = exp(lambda*.05);
